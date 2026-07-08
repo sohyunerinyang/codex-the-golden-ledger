@@ -1,0 +1,3432 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glow Passport | K-Beauty Skin Type Card</title>
+  <meta name="description" content="Create a saveable K-beauty skin type card with product recommendations for shopping in Korea.">
+  <style>
+    :root {
+      --primary: #2f5d63;
+      --primary-2: #7c9f98;
+      --ink: #2d2521;
+      --muted: #87786f;
+      --soft: #fbf7f1;
+      --surface: rgba(255, 252, 246, .88);
+      --line: rgba(202, 183, 164, .38);
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #ef4444;
+      --sky: #9bd6d2;
+      --violet: #b9a3cf;
+      --pink: #f4a6a9;
+      --mint: #c8e8dc;
+      --champagne: #ead8b8;
+      --coral: #e99180;
+      --cream: #fffaf0;
+      --shadow: 0 1px 3px rgba(64, 46, 38, .05), 0 30px 90px rgba(91, 68, 55, .13);
+      --shadow-soft: 0 1px 3px rgba(64, 46, 38, .07), 0 18px 54px rgba(91, 68, 55, .08);
+      --radius: 8px;
+      --font: Inter, Pretendard, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: "Cormorant Garamond", "Cormorant", "Bodoni 72", "Didot", Georgia, serif;
+      --mono: "SF Mono", "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255,250,240,.96), rgba(246,238,224,.94) 44%, rgba(235,245,239,.92)),
+        radial-gradient(circle at 16% 8%, rgba(244,166,169,.28), transparent 32%),
+        radial-gradient(circle at 88% 4%, rgba(155,214,210,.36), transparent 36%),
+        radial-gradient(circle at 76% 88%, rgba(234,216,184,.42), transparent 35%);
+      color: var(--ink);
+      font-family: var(--font);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .app {
+      min-height: 100vh;
+      display: block;
+      max-width: 100vw;
+      overflow-x: clip;
+    }
+
+    .rail {
+      position: sticky;
+      top: 0;
+      height: auto;
+      z-index: 60;
+      padding: 18px 32px;
+      background: rgba(255, 250, 241, .74);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      overflow: visible;
+      border-bottom: 1px solid rgba(202, 183, 164, .34);
+      backdrop-filter: blur(24px) saturate(1.1);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 52px;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 24%, rgba(255,255,255,.98) 0 12%, transparent 13%),
+        radial-gradient(circle at 72% 80%, rgba(255,244,218,.82), transparent 32%),
+        linear-gradient(135deg, #f6c7be, #e9d7ad 45%, #9bd6d2);
+      box-shadow: 0 18px 44px rgba(139, 93, 72, .22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 16px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.88);
+      transform: rotate(-24deg);
+    }
+
+    .brand strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      line-height: .9;
+    }
+
+    .brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .rail-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rail-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 0 12px;
+      border-radius: 999px;
+      color: #76675e;
+      font-size: 12px;
+      font-weight: 720;
+      text-transform: uppercase;
+    }
+
+    .rail-nav a:hover,
+    .rail-nav a.active {
+      background: rgba(255,255,255,.72);
+      color: var(--primary);
+      box-shadow: inset 0 0 0 1px rgba(202,183,164,.28);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .86;
+    }
+
+    .rail-card {
+      margin-top: 0;
+      max-width: 250px;
+      padding: 14px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.62);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.46), var(--shadow-soft);
+    }
+
+    .rail-card p {
+      display: none;
+    }
+
+    .rail-card strong {
+      display: block;
+      color: var(--primary);
+      font-size: 12px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    main {
+      min-width: 0;
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 34px clamp(18px, 4vw, 56px);
+    }
+
+    .topbar {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 18px;
+      height: 1px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--coral), var(--sky));
+      box-shadow: none;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 12px;
+      max-width: 840px;
+      font-family: var(--serif);
+      font-size: clamp(58px, 7vw, 116px);
+      line-height: .82;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-family: var(--serif);
+      font-size: clamp(38px, 4vw, 68px);
+      line-height: .92;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 800;
+    }
+
+    .lead {
+      max-width: 720px;
+      color: #6f625a;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 116px);
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(380px, .78fr);
+      gap: clamp(32px, 6vw, 92px);
+      align-items: center;
+      padding: 64px 0 84px;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 24px -4vw 48px;
+      z-index: -1;
+      border-radius: 36px;
+      background:
+        linear-gradient(90deg, rgba(255,250,241,.5), transparent 48%),
+        radial-gradient(circle at 74% 24%, rgba(244,166,169,.24), transparent 28%),
+        radial-gradient(circle at 84% 76%, rgba(155,214,210,.35), transparent 32%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.56);
+    }
+
+    .hero-copy {
+      min-width: 0;
+    }
+
+    .hero-start {
+      min-height: calc(100vh - 116px);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 80px 0;
+    }
+
+    .hero-start .hero-copy {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .hero-start .lead {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ambient-preview {
+      position: relative;
+      width: min(100%, 760px);
+      height: 320px;
+      margin: 38px auto 0;
+      border-radius: 999px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 28% 38%, rgba(255,255,255,.92), transparent 15%),
+        radial-gradient(circle at 68% 42%, rgba(246,199,190,.62), transparent 24%),
+        radial-gradient(circle at 46% 68%, rgba(155,214,210,.56), transparent 30%),
+        linear-gradient(135deg, rgba(255,255,255,.6), rgba(234,216,184,.24));
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow: 0 34px 110px rgba(91,68,55,.13), inset 0 1px 0 rgba(255,255,255,.8);
+      filter: saturate(1.06);
+      animation: breathGlow 6s ease-in-out infinite;
+    }
+
+    .ambient-preview::before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: inherit;
+      border: 1px solid rgba(255,255,255,.52);
+      background: linear-gradient(115deg, rgba(255,255,255,.24), transparent 58%);
+    }
+
+    .orbit-chip {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255,252,246,.7);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 820;
+      text-transform: uppercase;
+      box-shadow: 0 16px 36px rgba(91,68,55,.1), inset 0 1px 0 rgba(255,255,255,.74);
+      backdrop-filter: blur(18px);
+      animation: floatChip 7s ease-in-out infinite;
+    }
+
+    .orbit-chip:nth-child(1) { left: 11%; top: 28%; animation-delay: -.8s; }
+    .orbit-chip:nth-child(2) { right: 12%; top: 24%; animation-delay: -2s; }
+    .orbit-chip:nth-child(3) { left: 43%; bottom: 14%; animation-delay: -3.4s; }
+
+    .hero-product {
+      position: absolute;
+      bottom: 36px;
+      display: grid;
+      place-items: center;
+      width: 150px;
+      height: 188px;
+      border-radius: 32px;
+      background: rgba(255,255,255,.46);
+      border: 1px solid rgba(255,255,255,.68);
+      box-shadow: 0 22px 54px rgba(45,37,33,.14), inset 0 1px 0 rgba(255,255,255,.72);
+      backdrop-filter: blur(18px) saturate(1.12);
+      animation: floatBottle 6.8s ease-in-out infinite;
+    }
+
+    .hero-product img {
+      width: 112px;
+      height: 146px;
+      object-fit: contain;
+      filter: drop-shadow(0 18px 22px rgba(45,37,33,.18));
+    }
+
+    .hero-product.laneige {
+      left: 25%;
+      transform: rotate(-6deg);
+    }
+
+    .hero-product.anua {
+      right: 25%;
+      bottom: 58px;
+      transform: rotate(7deg);
+      animation-delay: -2.2s;
+    }
+
+    .mini-passport-card {
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      width: 166px;
+      height: 218px;
+      display: grid;
+      align-content: space-between;
+      padding: 18px;
+      border-radius: 28px;
+      color: white;
+      text-align: left;
+      background:
+        radial-gradient(circle at 62% 46%, rgba(255,255,255,.66), transparent 18%),
+        linear-gradient(145deg, #2f5d63, #b9d9d5 56%, #f3dfc7);
+      box-shadow: 0 30px 70px rgba(47,93,99,.2);
+      transform: translate(-50%, -50%) rotate(3deg);
+      animation: cardDrift 7.5s ease-in-out infinite;
+    }
+
+    .mini-passport-card strong {
+      font-family: var(--serif);
+      font-size: 28px;
+      line-height: .94;
+      font-weight: 560;
+    }
+
+    .mini-passport-card span {
+      font-size: 10px;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    @keyframes breathGlow {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.018); }
+    }
+
+    @keyframes floatChip {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(10px, -10px, 0); }
+    }
+
+    @keyframes floatBottle {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -14px; }
+    }
+
+    @keyframes cardDrift {
+      0%, 100% { transform: translate(-50%, -50%) rotate(3deg); }
+      50% { transform: translate(-50%, calc(-50% - 12px)) rotate(-2deg); }
+    }
+
+    .hero-actions,
+    .button-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 18px;
+      border-radius: 8px;
+      border: 0;
+      background: #2d2521;
+      color: var(--cream);
+      font-size: 14px;
+      font-weight: 780;
+      box-shadow: 0 16px 36px rgba(45,37,33,.16);
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      background: #463a33;
+      box-shadow: 0 18px 42px rgba(45,37,33,.2);
+    }
+
+    .button.secondary {
+      background: rgba(255,255,255,.68);
+      color: var(--ink);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(202,183,164,.42);
+      backdrop-filter: blur(16px);
+    }
+
+    .button.ghost {
+      background: rgba(255,255,255,.56);
+      color: var(--ink);
+      border: 1px solid rgba(202,183,164,.42);
+      box-shadow: none;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .icon-download {
+      position: relative;
+      font-size: 0;
+    }
+
+    .icon-download::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 2px;
+      width: 2px;
+      height: 8px;
+      border-radius: 1px;
+      background: currentColor;
+    }
+
+    .icon-download::after {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      border-left: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(-45deg);
+      box-sizing: border-box;
+    }
+
+    .icon-download i {
+      position: absolute;
+      left: 3px;
+      top: 13px;
+      width: 12px;
+      height: 2px;
+      border-radius: 1px;
+      background: currentColor;
+      display: block;
+    }
+
+    .icon-cards {
+      position: relative;
+      font-size: 0;
+    }
+
+    .icon-cards::before,
+    .icon-cards::after {
+      content: "";
+      position: absolute;
+      width: 11px;
+      height: 8px;
+      border: 2px solid currentColor;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+
+    .icon-cards::before {
+      left: 1px;
+      top: 4px;
+      opacity: .7;
+    }
+
+    .icon-cards::after {
+      left: 6px;
+      top: 7px;
+      background: transparent;
+    }
+
+    .icon-survey {
+      position: relative;
+      font-size: 0;
+    }
+
+    .icon-survey::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 14px;
+      height: 14px;
+      border: 2px solid currentColor;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .icon-survey::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      width: 6px;
+      height: 3px;
+      border-left: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(-45deg);
+      box-sizing: border-box;
+    }
+
+    .device {
+      width: min(100%, 468px);
+      justify-self: center;
+      perspective: 1300px;
+    }
+
+    .result-stage {
+      min-height: 670px;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      border-radius: 42px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.66), rgba(255,255,255,.24)),
+        radial-gradient(circle at 22% 8%, rgba(255,255,255,.74), transparent 25%),
+        radial-gradient(circle at 20% 78%, rgba(234,216,184,.46), transparent 36%),
+        radial-gradient(circle at 82% 22%, rgba(244,166,169,.36), transparent 34%),
+        radial-gradient(circle at 72% 84%, rgba(155,214,210,.48), transparent 35%);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,.62);
+    }
+
+    .result-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(115deg, transparent 0 32%, rgba(255,255,255,.38) 33% 36%, transparent 37%),
+        radial-gradient(circle at 80% 10%, rgba(255,255,255,.82) 0 6px, transparent 7px),
+        radial-gradient(circle at 11% 72%, rgba(255,255,255,.74) 0 4px, transparent 5px);
+      pointer-events: none;
+    }
+
+    .skin-card {
+      width: min(100%, 356px);
+      aspect-ratio: 3 / 4.68;
+      border-radius: 36px;
+      color: white;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transform: rotate(-4deg);
+      box-shadow: 0 34px 80px rgba(79,62,53,.24);
+      background: linear-gradient(152deg, #2f5d63, #9bd6d2 54%, #f6c7be);
+      animation: cardFloat 5s ease-in-out infinite;
+      transform-style: preserve-3d;
+    }
+
+    .skin-card.reveal {
+      animation: cardPop .9s cubic-bezier(.16,1,.3,1) both, cardFloat 5s ease-in-out 1s infinite;
+    }
+
+    @keyframes cardPop {
+      0% { opacity: 0; transform: translateY(40px) rotateY(-74deg) rotate(-12deg) scale(.82); }
+      62% { opacity: 1; transform: translateY(-8px) rotateY(9deg) rotate(3deg) scale(1.04); }
+      100% { opacity: 1; transform: translateY(0) rotateY(0) rotate(-4deg) scale(1); }
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -10px; }
+    }
+
+    .skin-card::before {
+      content: "";
+      position: absolute;
+      inset: -18%;
+      background:
+        radial-gradient(circle at 20% 24%, rgba(255,255,255,.62) 0 7%, transparent 8%),
+        radial-gradient(circle at 74% 78%, rgba(255,255,255,.48) 0 10%, transparent 11%),
+        linear-gradient(115deg, transparent 0 35%, rgba(255,255,255,.3) 36% 42%, transparent 43%);
+      filter: blur(.2px);
+      transform: rotate(10deg);
+      mix-blend-mode: soft-light;
+    }
+
+    .card-top,
+    .card-bottom {
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-owner {
+      font-family: var(--serif);
+      font-size: 38px;
+      line-height: .88;
+      font-weight: 500;
+      letter-spacing: 0;
+      min-height: 102px;
+    }
+
+    .card-orb {
+      width: 194px;
+      height: 142px;
+      margin: 36px auto 0;
+      position: relative;
+      filter: drop-shadow(0 28px 26px rgba(79,62,53,.2));
+    }
+
+    .card-orb span {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,.72), transparent 16%),
+        radial-gradient(circle at 58% 74%, rgba(255,255,255,.36), transparent 20%),
+        var(--orb, linear-gradient(135deg, #f9a8d4, #60a5fa));
+      transform: rotate(-16deg);
+    }
+
+    .card-orb span:nth-child(2) {
+      width: 44%;
+      height: 112%;
+      left: 34%;
+      top: -6%;
+      border-radius: 50%;
+      background: linear-gradient(90deg, rgba(255,255,255,.8), rgba(255,255,255,.18));
+      transform: rotate(21deg);
+      backdrop-filter: blur(2px);
+    }
+
+    .card-bottom {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 26px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .type-pill {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.22);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .card-products {
+      display: grid;
+      gap: 7px;
+    }
+
+    .card-products div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+    }
+
+    .card-products strong {
+      color: white;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-brand {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      font-size: 11px;
+      font-weight: 850;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.86);
+    }
+
+    .card-brand span:last-child {
+      font-size: 16px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    section {
+      padding: 62px 0;
+      scroll-margin-top: 112px;
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 26px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .panel {
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,.48);
+      backdrop-filter: blur(18px);
+    }
+
+    .panel p,
+    .case p,
+    .product-card p,
+    .answer-help {
+      color: var(--muted);
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 26px 0 0;
+    }
+
+    .metric {
+      padding: 18px;
+      border-radius: var(--radius);
+      background: rgba(255,252,246,.82);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--primary);
+      font-size: 26px;
+      font-weight: 860;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .case {
+      padding: 22px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: 14px;
+    }
+
+    .case-top {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .rank {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #eff6ff;
+      color: var(--primary);
+      font-family: var(--mono);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      min-height: 26px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0 10px;
+      background: rgba(255,255,255,.58);
+      color: #6f625a;
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .tag.hot { background: rgba(239,68,68,.1); color: #be123c; }
+    .tag.good { background: rgba(16,185,129,.1); color: #047857; }
+    .tag.warn { background: rgba(245,158,11,.13); color: #b45309; }
+
+    .quiz-layout {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(320px, .44fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .question-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .question {
+      padding: 22px;
+      border-radius: var(--radius);
+      background: rgba(255,252,246,.82);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255,255,255,.5);
+      backdrop-filter: blur(14px);
+      display: none;
+      min-height: 368px;
+      transform-style: preserve-3d;
+      animation: questionFlipIn .5s cubic-bezier(.16,1,.3,1) both;
+    }
+
+    .question.active {
+      display: grid;
+      align-content: center;
+    }
+
+    .question.answered {
+      animation: questionFlipOut .38s cubic-bezier(.7,0,.84,0) both;
+    }
+
+    @keyframes questionFlipIn {
+      from { opacity: 0; transform: rotateY(18deg) translateY(12px) scale(.98); }
+      to { opacity: 1; transform: rotateY(0) translateY(0) scale(1); }
+    }
+
+    @keyframes questionFlipOut {
+      from { opacity: 1; transform: rotateY(0) translateY(0) scale(1); }
+      to { opacity: 0; transform: rotateY(-16deg) translateY(-8px) scale(.98); }
+    }
+
+    .question legend {
+      padding: 0;
+      margin-bottom: 14px;
+      font-size: 15px;
+      font-weight: 820;
+    }
+
+    .question legend::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 72px;
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.58);
+      background:
+        radial-gradient(circle at 18% 52%, rgba(255,255,255,.88) 0 8px, transparent 9px),
+        radial-gradient(circle at 38% 52%, rgba(155,214,210,.42) 0 16px, transparent 17px),
+        radial-gradient(circle at 58% 52%, rgba(244,166,169,.36) 0 12px, transparent 13px),
+        radial-gradient(circle at 78% 52%, rgba(234,216,184,.45) 0 10px, transparent 11px),
+        linear-gradient(120deg, rgba(255,255,255,.62), rgba(255,250,241,.3));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+      animation: surveyFloat 5.6s ease-in-out infinite;
+    }
+
+    @keyframes surveyFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    fieldset {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .answers label {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.54);
+      color: #5f524b;
+      font-size: 13px;
+      font-weight: 680;
+      transition: background .18s ease, box-shadow .18s ease, color .18s ease;
+    }
+
+    .answers input {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(202,183,164,.7);
+      background: rgba(255,255,255,.78);
+      flex: 0 0 auto;
+    }
+
+    .answers label:has(input:checked) {
+      background: rgba(243, 226, 204, .58);
+      color: var(--primary);
+      box-shadow: inset 0 0 0 1px rgba(47,93,99,.28), 0 10px 24px rgba(139,93,72,.08);
+    }
+
+    .answers input:checked {
+      border: 5px solid var(--primary);
+    }
+
+    .answer-help {
+      margin: 10px 0 0;
+      font-size: 12px;
+    }
+
+    .result-panel {
+      position: sticky;
+      top: 24px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-panel.locked,
+    .result-page.locked {
+      display: none;
+    }
+
+    .result-page {
+      padding-top: 42px;
+    }
+
+    .result-showcase {
+      display: grid;
+      grid-template-columns: minmax(360px, .72fr) minmax(0, .78fr);
+      gap: clamp(28px, 5vw, 76px);
+      align-items: center;
+      padding: 34px;
+      border-radius: 42px;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,.64), transparent 22%),
+        radial-gradient(circle at 84% 20%, rgba(246,199,190,.24), transparent 26%),
+        radial-gradient(circle at 70% 84%, rgba(155,214,210,.3), transparent 28%),
+        rgba(255,252,246,.46);
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    .result-card-stage {
+      min-height: 620px;
+      display: grid;
+      place-items: center;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 20% 14%, rgba(255,255,255,.8), transparent 22%),
+        linear-gradient(145deg, rgba(255,255,255,.4), rgba(255,255,255,.14));
+      overflow: hidden;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .quiz-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .score-bars {
+      display: grid;
+      gap: 12px;
+    }
+
+    .score-line {
+      display: grid;
+      gap: 6px;
+    }
+
+    .score-line div:first-child {
+      display: flex;
+      justify-content: space-between;
+      color: #6f625a;
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .bar {
+      height: 9px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(202,183,164,.28);
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      width: var(--w, 0%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--primary), var(--coral), var(--sky));
+      transition: width .35s ease;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .product-card {
+      padding: 18px;
+      border-radius: var(--radius);
+      background: rgba(255,252,246,.86);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: 12px;
+      border: 1px solid rgba(255,255,255,.5);
+      backdrop-filter: blur(14px);
+    }
+
+    .product-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .price {
+      font-family: var(--mono);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 820;
+      white-space: nowrap;
+    }
+
+    .trend-console {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 250px;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .trend-feed {
+      min-height: 220px;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .feed-item {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .feed-item span {
+      color: var(--muted);
+      font-size: 11px;
+      font-family: var(--mono);
+    }
+
+    .feed-item strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .strategy-card {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 14px;
+      padding: 18px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .strategy-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: #eaf4ff;
+      color: var(--primary);
+      font-family: var(--mono);
+      font-weight: 900;
+    }
+
+    .notice {
+      padding: 16px;
+      border-radius: var(--radius);
+      background: rgba(255, 245, 230, .9);
+      color: #8a4b35;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .flow-step,
+    .type-card {
+      padding: 18px;
+      border-radius: var(--radius);
+      background: rgba(255,252,246,.82);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255,255,255,.5);
+      backdrop-filter: blur(14px);
+    }
+
+    .flow-step span,
+    .type-card span,
+    .micro-label {
+      display: block;
+      color: var(--primary-2);
+      font-size: 11px;
+      font-weight: 820;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .flow-step strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .survey-progress {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .survey-progress .bar {
+      height: 10px;
+    }
+
+    .survey-progress strong {
+      color: var(--primary);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .question {
+      position: relative;
+    }
+
+    .question::before {
+      display: none;
+    }
+
+    .question legend {
+      max-width: none;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      color: #6f625a;
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 46px;
+      border: 0;
+      border-radius: 8px;
+      background: rgba(255,255,255,.62);
+      color: var(--ink);
+      padding: 0 12px;
+      box-shadow: inset 0 0 0 1px rgba(202,183,164,.38);
+    }
+
+    .action-panel {
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .action-panel.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .saved-note {
+      min-height: 22px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .type-card {
+      min-height: 168px;
+      display: grid;
+      align-content: space-between;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transform: translateY(0) rotate(0);
+      transition: transform .32s cubic-bezier(.16,1,.3,1), box-shadow .32s ease, background .32s ease, border-color .32s ease;
+    }
+
+    .type-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, transparent 0 32%, rgba(255,255,255,.58) 38%, transparent 44%),
+        radial-gradient(circle at 18% 16%, rgba(255,255,255,.45), transparent 26%);
+      opacity: 0;
+      transform: translateX(-28%);
+      transition: opacity .28s ease, transform .48s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .type-card::after {
+      content: "";
+      position: absolute;
+      width: 128px;
+      height: 128px;
+      right: -38px;
+      bottom: -42px;
+      border-radius: 42% 58% 48% 52%;
+      background: var(--type-grad);
+      opacity: .86;
+      filter: saturate(1.1);
+      transition: transform .36s ease, opacity .36s ease, filter .36s ease;
+    }
+
+    .type-card:hover,
+    .type-card.active {
+      transform: translateY(-7px) rotate(-.5deg);
+      background: rgba(255,255,255,.54);
+      border-color: rgba(255,255,255,.8);
+      box-shadow: 0 24px 70px rgba(91,68,55,.16);
+    }
+
+    .type-card:hover::before,
+    .type-card.active::before {
+      opacity: 1;
+      transform: translateX(24%);
+    }
+
+    .type-card:hover::after,
+    .type-card.active::after {
+      transform: scale(1.18) rotate(8deg);
+      opacity: .96;
+      filter: saturate(1.2) blur(.1px);
+    }
+
+    .type-card h3,
+    .type-card p,
+    .type-card .tag-row {
+      position: relative;
+      z-index: 2;
+    }
+
+    .type-card p {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .ritual-detail {
+      padding-top: 26px;
+    }
+
+    .detail-hero {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+      padding: 28px;
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.58), rgba(255,250,241,.38)),
+        radial-gradient(circle at 86% 14%, rgba(155,214,210,.28), transparent 28%),
+        radial-gradient(circle at 10% 70%, rgba(244,166,169,.2), transparent 30%);
+      border: 1px solid rgba(255,255,255,.58);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+    }
+
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .detail-products {
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+    }
+
+    .product-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 430px;
+      align-content: start;
+      transition: transform .28s ease, box-shadow .28s ease, background .28s ease;
+    }
+
+    .product-card::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      right: -46px;
+      top: -48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(244,166,169,.22), rgba(155,214,210,.24));
+      pointer-events: none;
+    }
+
+    .product-media {
+      position: relative;
+      z-index: 1;
+      min-height: 220px;
+      border-radius: 22px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.72), rgba(255,250,241,.42)),
+        radial-gradient(circle at 72% 18%, rgba(155,214,210,.28), transparent 32%),
+        radial-gradient(circle at 18% 82%, rgba(244,166,169,.24), transparent 34%);
+      border: 1px solid rgba(255,255,255,.6);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.62), 0 18px 46px rgba(91,68,55,.08);
+    }
+
+    .product-media img {
+      width: min(88%, 230px);
+      height: 178px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      filter: drop-shadow(0 18px 24px rgba(45,37,33,.16));
+      transform: translateY(2px) scale(.98);
+      transition: transform .34s ease, filter .34s ease;
+    }
+
+    .retailer-badge {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      z-index: 2;
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 11px;
+      border-radius: 999px;
+      color: var(--primary);
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(255,255,255,.74);
+      box-shadow: 0 10px 24px rgba(45,37,33,.1), inset 0 1px 0 rgba(255,255,255,.8);
+      backdrop-filter: blur(16px);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .retailer-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--coral), var(--sky));
+    }
+
+    .product-fallback {
+      width: 104px;
+      height: 104px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      color: rgba(47,93,99,.74);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      background: linear-gradient(135deg, rgba(255,255,255,.9), rgba(155,214,210,.26), rgba(244,166,169,.22));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 16px 34px rgba(45,37,33,.1);
+    }
+
+    .product-media:not(.image-missing) .product-fallback {
+      display: none;
+    }
+
+    .product-media.image-missing img {
+      display: none;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 24px 70px rgba(91,68,55,.13);
+    }
+
+    .product-card:hover .product-media img {
+      transform: translateY(-4px) scale(1.04) rotate(-1.5deg);
+      filter: drop-shadow(0 24px 30px rgba(45,37,33,.2));
+    }
+
+    .shop-link {
+      width: fit-content;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 13px;
+      border-radius: 999px;
+      background: rgba(47,93,99,.1);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 860;
+      text-transform: uppercase;
+      transition: transform .2s ease, background .2s ease;
+    }
+
+    .shop-link:hover {
+      transform: translateY(-1px);
+      background: rgba(47,93,99,.16);
+    }
+
+    .product-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .cart-action {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 0 14px;
+      border: 1px solid rgba(47,93,99,.28);
+      border-radius: 999px;
+      background: rgba(255,255,255,.7);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 860;
+      text-transform: uppercase;
+      transition: transform .2s ease, background .2s ease, color .2s ease;
+    }
+
+    .cart-action::before {
+      content: "";
+      width: 14px;
+      height: 11px;
+      border: 2px solid currentColor;
+      border-top-width: 1.5px;
+      border-radius: 2px 2px 4px 4px;
+      transform: translateY(1px);
+      box-sizing: border-box;
+    }
+
+    .cart-action:hover {
+      transform: translateY(-1px);
+      background: rgba(47,93,99,.12);
+    }
+
+    .cart-action.added {
+      background: rgba(47,93,99,.14);
+      color: #1f4b50;
+      border-color: rgba(47,93,99,.42);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+    }
+
+    .tote-lab {
+      margin-bottom: 16px;
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+      background: rgba(255,252,246,.74);
+      border: 1px solid rgba(255,255,255,.66);
+    }
+
+    .tote-lab h3 {
+      margin: 0;
+      text-align: center;
+      color: var(--primary);
+    }
+
+    .tote-bag {
+      width: min(100%, 460px);
+      height: 280px;
+      border-radius: 26px 26px 32px 32px;
+      border: 2px solid rgba(255,255,255,.74);
+      background:
+        radial-gradient(circle at 18% 86%, rgba(244,166,169,.26), transparent 24%),
+        radial-gradient(circle at 78% 80%, rgba(155,214,210,.3), transparent 24%),
+        linear-gradient(150deg, rgba(255,255,255,.5), rgba(255,255,255,.22));
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.86), 0 20px 54px rgba(91,68,55,.12);
+      backdrop-filter: blur(14px);
+    }
+
+    .cart-basket-image {
+      position: absolute;
+      left: 50%;
+      bottom: 26px;
+      width: min(74%, 320px);
+      height: 184px;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 16px 24px rgba(45,37,33,.16));
+      opacity: .9;
+      pointer-events: none;
+      z-index: 1;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 300'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff' stop-opacity='.88'/%3E%3Cstop offset='1' stop-color='%23cde8e2' stop-opacity='.7'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23fff9ef' stop-opacity='.86'/%3E%3Cstop offset='1' stop-color='%23efdcc1' stop-opacity='.7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cellipse cx='270' cy='250' rx='190' ry='30' fill='%233d3d3d' opacity='.15'/%3E%3Cpath d='M95 112h350l-30 140H125z' fill='url(%23g1)' stroke='%23ffffff' stroke-opacity='.9' stroke-width='5'/%3E%3Cpath d='M165 112h210l-14 140H179z' fill='url(%23g2)' opacity='.72'/%3E%3Cpath d='M170 112c0-56 43-94 100-94s100 38 100 94' fill='none' stroke='%23fff' stroke-opacity='.9' stroke-width='10' stroke-linecap='round'/%3E%3Cpath d='M95 112h350' stroke='%23fff' stroke-opacity='.88' stroke-width='8'/%3E%3Ccircle cx='198' cy='173' r='18' fill='%23f6c7be' opacity='.55'/%3E%3Ccircle cx='338' cy='184' r='22' fill='%239bd6d2' opacity='.55'/%3E%3C/svg%3E");
+    }
+
+    .tote-bag::before,
+    .tote-bag::after {
+      content: "";
+      position: absolute;
+      top: -22px;
+      width: 120px;
+      height: 66px;
+      border: 5px solid rgba(255,255,255,.8);
+      border-bottom: 0;
+      border-radius: 64px 64px 0 0;
+      opacity: .9;
+    }
+
+    .tote-bag::before { left: 56px; }
+    .tote-bag::after { right: 56px; }
+
+    .tote-drop-zone {
+      position: absolute;
+      inset: 16px;
+      display: grid;
+      align-content: end;
+      justify-content: center;
+      gap: 8px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .tote-bead {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.84);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.84), transparent 35%),
+        var(--bead-bg, radial-gradient(circle at 45% 42%, rgba(155,214,210,.5), rgba(244,166,169,.3)));
+      box-shadow: 0 12px 20px rgba(45,37,33,.15);
+      background-size: cover;
+      background-position: center;
+      animation: beadDrop .48s cubic-bezier(.16,1,.3,1) both;
+    }
+
+    @keyframes beadDrop {
+      from { transform: translateY(-140px) scale(.82); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .tote-summary {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      min-height: 30px;
+    }
+
+    .tote-chip {
+      min-height: 26px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0 10px;
+      background: rgba(255,255,255,.74);
+      font-size: 11px;
+      color: #5f524b;
+      font-weight: 760;
+    }
+
+    .cart-fly {
+      position: fixed;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.82);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.85), transparent 35%),
+        var(--bead-bg, radial-gradient(circle at 45% 42%, rgba(155,214,210,.5), rgba(244,166,169,.3)));
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 14px 26px rgba(45,37,33,.2);
+      pointer-events: none;
+      z-index: 120;
+      transform: translate3d(0,0,0) scale(1);
+      transition: transform .72s cubic-bezier(.16,1,.3,1), opacity .72s ease;
+    }
+
+    .quiz-type-strip {
+      margin-top: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .quiz-type-strip h3 {
+      margin: 4px 0 0;
+      font-size: 24px;
+      font-family: var(--serif);
+      font-weight: 560;
+    }
+
+    .floating-seed {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 70;
+      display: grid;
+      gap: 10px;
+      justify-items: end;
+    }
+
+    .seed-button {
+      min-height: 70px;
+      display: inline-flex;
+      align-items: center;
+      gap: 13px;
+      padding: 10px 18px 10px 12px;
+      border: 1px solid rgba(255,255,255,.7);
+      border-radius: 999px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.84), rgba(255,250,241,.64)),
+        radial-gradient(circle at 18% 24%, rgba(246,199,190,.46), transparent 32%),
+        radial-gradient(circle at 76% 74%, rgba(155,214,210,.4), transparent 34%);
+      color: var(--ink);
+      box-shadow: 0 24px 70px rgba(45,37,33,.18), inset 0 1px 0 rgba(255,255,255,.82);
+      backdrop-filter: blur(22px) saturate(1.15);
+      font-weight: 820;
+      text-align: left;
+      transition: transform .24s ease, box-shadow .24s ease, background .24s ease;
+    }
+
+    .seed-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 30px 82px rgba(45,37,33,.22), inset 0 1px 0 rgba(255,255,255,.86);
+    }
+
+    .seed-button span:last-child {
+      display: grid;
+      gap: 2px;
+      line-height: 1.05;
+    }
+
+    .seed-button small {
+      color: var(--primary);
+      font-size: 10px;
+      font-weight: 860;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .seed-button-mark {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 38% 32%, #fff, transparent 18%),
+        linear-gradient(135deg, var(--coral), var(--sky) 64%, var(--cream));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 14px 28px rgba(47,93,99,.18);
+      position: relative;
+    }
+
+    .seed-button-mark::after {
+      content: "";
+      position: absolute;
+      inset: 15px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.9);
+      transform: rotate(-24deg);
+    }
+
+    .seed-panel {
+      width: min(360px, calc(100vw - 28px));
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,252,246,.78);
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px) saturate(1.18);
+      display: none;
+    }
+
+    .seed-panel.open {
+      display: block;
+      animation: questionFlipIn .36s cubic-bezier(.16,1,.3,1) both;
+    }
+
+    .reveal-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(45,37,33,.48);
+      backdrop-filter: blur(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .32s ease;
+    }
+
+    .reveal-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .reveal-shell {
+      width: min(100%, 1020px);
+      display: grid;
+      grid-template-columns: minmax(320px, .84fr) minmax(300px, .62fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    .reveal-card-wrap {
+      min-height: 650px;
+      display: grid;
+      place-items: center;
+      border-radius: 42px;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255,255,255,.78), transparent 18%),
+        radial-gradient(circle at 86% 8%, rgba(244,166,169,.32), transparent 22%),
+        radial-gradient(circle at 20% 82%, rgba(155,214,210,.42), transparent 26%),
+        linear-gradient(145deg, rgba(255,250,241,.66), rgba(255,255,255,.24));
+      box-shadow: 0 40px 110px rgba(45,37,33,.24);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.55);
+    }
+
+    .reveal-info {
+      padding: 24px;
+      border-radius: var(--radius);
+      background: rgba(255,252,246,.9);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.5);
+      backdrop-filter: blur(18px);
+    }
+
+    .reveal-actions {
+      margin-top: 18px;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 0;
+      background: rgba(255,255,255,.92);
+      color: var(--ink);
+      font-weight: 900;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .skin-card {
+      border: 1px solid rgba(255,255,255,.24);
+    }
+
+    .skin-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(125deg, transparent 0 26%, rgba(255,255,255,.52) 30%, transparent 34%),
+        repeating-linear-gradient(100deg, rgba(255,255,255,.12) 0 1px, transparent 1px 12px);
+      mix-blend-mode: soft-light;
+      opacity: .85;
+      pointer-events: none;
+    }
+
+    .card-owner {
+      text-shadow: 0 2px 24px rgba(15,23,42,.2);
+    }
+
+    .card-products {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.2);
+      backdrop-filter: blur(12px);
+    }
+
+    .card-korean {
+      margin-top: -2px;
+      color: rgba(255,255,255,.74);
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .mobile-nav {
+      display: none;
+    }
+
+    @media (max-width: 1040px) {
+      .app { grid-template-columns: 1fr; }
+      .rail {
+        position: relative;
+        height: auto;
+        padding: 18px;
+        flex-direction: row;
+        align-items: center;
+      }
+      .rail-nav, .rail-card { display: none; }
+      main { padding: 18px; }
+      .hero,
+      .quiz-layout,
+      .result-showcase,
+      .trend-console,
+      .reveal-shell,
+      .detail-layout {
+        grid-template-columns: 1fr;
+      }
+      .result-panel { position: static; }
+      .device { justify-self: start; }
+      .metric-row,
+      .grid.cols-3,
+      .grid.cols-2,
+      .product-grid,
+      .detail-products,
+      .flow-steps,
+      .type-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .reveal-card-wrap { min-height: 560px; }
+      .result-card-stage { min-height: 560px; }
+    }
+
+    @media (max-width: 680px) {
+      main { padding: 14px; }
+      section { padding: 42px 0; }
+      .topbar { align-items: start; flex-direction: column; }
+      h1 { font-size: 44px; }
+      .lead { font-size: 16px; }
+      .metric-row,
+      .grid.cols-3,
+      .grid.cols-2,
+      .product-grid,
+      .detail-products,
+      .answers,
+      .flow-steps,
+      .type-grid {
+        grid-template-columns: 1fr;
+      }
+      .detail-hero { align-items: start; flex-direction: column; padding: 20px; }
+      .topbar .button-row { display: none; }
+      .result-stage {
+        min-height: 530px;
+        padding: 12px;
+        border-radius: 22px;
+      }
+      .skin-card {
+        width: min(100%, 312px);
+        border-radius: 26px;
+        padding: 24px;
+      }
+      .card-owner { font-size: 24px; }
+      .card-bottom {
+        left: 24px;
+        right: 24px;
+        bottom: 22px;
+      }
+      .hero::before { inset: 18px 0 36px; }
+      .type-card:hover,
+      .type-card.active {
+        transform: translateY(-4px);
+      }
+      .reveal-modal { padding: 12px; align-items: start; overflow: auto; }
+      .reveal-shell { gap: 12px; }
+      .reveal-card-wrap { min-height: 520px; border-radius: 22px; }
+      .reveal-info { padding: 18px; }
+      .close-modal { top: 12px; right: 12px; }
+      .hero-start { min-height: calc(100vh - 86px); padding: 58px 0; }
+      .ambient-preview { height: 150px; }
+      .question { min-height: 430px; }
+      .result-showcase { padding: 16px; border-radius: 26px; }
+      .result-card-stage { min-height: 520px; border-radius: 22px; }
+      .floating-seed { right: 14px; bottom: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail" aria-label="Glow Passport navigation">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span><strong>GLOW PASSPORT</strong><span>Seoul skin rituals</span></span>
+      </a>
+      <nav class="rail-nav">
+        <a class="active" href="#top"><span class="dot"></span>Start</a>
+        <a href="#quiz"><span class="dot"></span>Survey</a>
+        <a href="#card-types"><span class="dot"></span>Card types</a>
+        <a href="#products"><span class="dot"></span>Products</a>
+      </nav>
+      <div class="rail-card">
+        <strong>Resort skin, Seoul shelf</strong>
+        <p>Show your card when you need help finding products for your skin type.</p>
+      </div>
+    </aside>
+
+    <main id="top">
+      <section class="hero hero-start" aria-label="K-beauty card generator">
+        <div class="hero-copy">
+          <span class="kicker">A skin ritual card for Seoul beauty shopping</span>
+          <h1>Meet your glow ritual.</h1>
+          <p class="lead">A calm, saveable K-beauty card for your skin pattern, product textures, and travel climate. Made for beauty lovers who want the clean-girl glow without guessing at the shelf.</p>
+          <div class="hero-actions">
+            <a class="button" href="#quiz" id="startSurvey"><span class="icon icon-survey" aria-hidden="true"></span>Take the survey</a>
+          </div>
+          <div class="ambient-preview" aria-hidden="true">
+            <span class="orbit-chip">Olive Young</span>
+            <span class="orbit-chip">Glass skin</span>
+            <span class="orbit-chip">Seoul shelf</span>
+            <div class="hero-product laneige">
+              <img src="https://media.glamgeek.com/media/2022/04/06/503aaebc-fc78-43eb-8a54-a95a30916c5a_lg.jpg" alt="" loading="lazy" referrerpolicy="no-referrer">
+            </div>
+            <div class="mini-passport-card">
+              <strong>Jelly<br>Mist</strong>
+              <span>Glow passport</span>
+            </div>
+            <div class="hero-product anua">
+              <img src="https://www.kiyobeauty.com/cdn/shop/files/AnuaPDRNHyaluronicAcidHydratingCapsuleMist100ml.png?v=1780088829&width=1500" alt="" loading="lazy" referrerpolicy="no-referrer">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="quiz" aria-label="Skin type survey">
+        <div class="section-head">
+          <span class="kicker">Survey</span>
+          <h2>Begin with your skin mood.</h2>
+          <p class="lead">Choose what happens most often. Your result blends oil pattern, hydration, sensitivity, breakouts, tone, preferred textures, sunscreen finish, and travel climate.</p>
+        </div>
+
+        <div class="quiz-layout">
+          <form class="question-list" id="quizForm">
+            <div class="survey-progress panel">
+              <div><span class="micro-label">Saved survey</span><strong id="progressText">0 of 10 answered</strong></div>
+              <div class="bar"><span id="progressBar" style="--w:0%"></span></div>
+            </div>
+
+            <div class="question" data-step="01">
+              <fieldset>
+                <legend>Two hours after washing with a gentle cleanser, your face usually feels:</legend>
+                <div class="answers">
+                  <label><input type="radio" name="oil" value="dry">Tight or matte everywhere</label>
+                  <label><input type="radio" name="oil" value="balanced">Comfortable, barely shiny</label>
+                  <label><input type="radio" name="oil" value="combo">Oily T-zone, dry cheeks</label>
+                  <label><input type="radio" name="oil" value="oily">Shiny across most areas</label>
+                </div>
+                <p class="answer-help">This checks oil and water balance, not skin color.</p>
+              </fieldset>
+            </div>
+
+            <div class="question" data-step="02">
+              <fieldset>
+                <legend>How often do products sting, burn, or make you red?</legend>
+                <div class="answers">
+                  <label><input type="radio" name="sensitivity" value="low">Rarely</label>
+                  <label><input type="radio" name="sensitivity" value="medium">Sometimes with actives</label>
+                  <label><input type="radio" name="sensitivity" value="high">Often, even gentle products</label>
+                  <label><input type="radio" name="sensitivity" value="barrier">After exfoliating or retinoids</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="question" data-step="03">
+              <fieldset>
+                <legend>After a long flight or hotel air conditioning, your skin tends to:</legend>
+                <div class="answers">
+                  <label><input type="radio" name="dehydration" value="tight">Feel tight under oil</label>
+                  <label><input type="radio" name="dehydration" value="flaky">Get flaky patches</label>
+                  <label><input type="radio" name="dehydration" value="fine">Stay mostly normal</label>
+                  <label><input type="radio" name="dehydration" value="dull">Look dull and tired</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="question" data-step="04">
+              <fieldset>
+                <legend>Your biggest summer or travel problem is:</legend>
+                <div class="answers">
+                  <label><input type="radio" name="climate" value="humidity">Humidity makes me greasy</label>
+                  <label><input type="radio" name="climate" value="plane">Flights make me dehydrated</label>
+                  <label><input type="radio" name="climate" value="sun">Sun brings spots or redness</label>
+                  <label><input type="radio" name="climate" value="ac">Air conditioning makes me flaky</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="question" data-step="05">
+              <fieldset>
+                <legend>Breakouts and pores are:</legend>
+                <div class="answers">
+                  <label><input type="radio" name="acne" value="low">Rare</label>
+                  <label><input type="radio" name="acne" value="pores">Pores and blackheads</label>
+                  <label><input type="radio" name="acne" value="inflamed">Inflamed pimples</label>
+                  <label><input type="radio" name="acne" value="maskne">Triggered by sunscreen or masks</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="question" data-step="06">
+              <fieldset>
+                <legend>Marks, tone, or redness after sun and breakouts:</legend>
+                <div class="answers">
+                  <label><input type="radio" name="tone" value="none">Not a main concern</label>
+                  <label><input type="radio" name="tone" value="red">Redness stays visible</label>
+                  <label><input type="radio" name="tone" value="brown">Brown marks linger</label>
+                  <label><input type="radio" name="tone" value="dull">Overall tone looks dull</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="question" data-step="07">
+              <fieldset>
+                <legend>Your product texture preference:</legend>
+                <div class="answers">
+                  <label><input type="radio" name="texture" value="gel">Gel, watery, no residue</label>
+                  <label><input type="radio" name="texture" value="cream">Creamy and cushiony</label>
+                  <label><input type="radio" name="texture" value="mist">Mists and light layers</label>
+                  <label><input type="radio" name="texture" value="balm">Balms or sleeping masks</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="question" data-step="08">
+              <fieldset>
+                <legend>Which product do you most want help choosing in Korea?</legend>
+                <div class="answers">
+                  <label><input type="radio" name="need" value="spf">Daily sunscreen</label>
+                  <label><input type="radio" name="need" value="toner">Toner or essence</label>
+                  <label><input type="radio" name="need" value="serum">Serum or ampoule</label>
+                  <label><input type="radio" name="need" value="cream">Cream or lotion</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="question" data-step="09">
+              <fieldset>
+                <legend>Your sunscreen finish preference:</legend>
+                <div class="answers">
+                  <label><input type="radio" name="spfFinish" value="matte">Soft matte</label>
+                  <label><input type="radio" name="spfFinish" value="dewy">Dewy glow</label>
+                  <label><input type="radio" name="spfFinish" value="no-cast">No white cast</label>
+                  <label><input type="radio" name="spfFinish" value="sensitive">Mineral or sensitive-skin</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="question" data-step="10">
+              <fieldset>
+                <legend>What result would make you save the card?</legend>
+                <div class="answers">
+                  <label><input type="radio" name="goal" value="glass">Glass skin glow</label>
+                  <label><input type="radio" name="goal" value="calm">Calm, non-reactive skin</label>
+                  <label><input type="radio" name="goal" value="clear">Clearer pores</label>
+                  <label><input type="radio" name="goal" value="even">More even tone</label>
+                </div>
+              </fieldset>
+            </div>
+          </form>
+
+          <aside class="result-panel locked" id="quizSideResult">
+            <div class="panel">
+              <span class="kicker">Your match</span>
+              <h3 id="resultName">Barrier Bounce</h3>
+              <p id="resultCopy">Dehydrated-oily skin that wants water, barrier support, and non-greasy SPF.</p>
+              <div class="score-bars" id="scoreBars"></div>
+            </div>
+            <div class="panel">
+              <span class="kicker">Create card</span>
+              <div class="field">
+                <label for="nameInput">What is your name?</label>
+                <input id="nameInput" value="Maya" autocomplete="given-name">
+              </div>
+              <div class="field">
+                <label for="emailInput">Email for product picks or free gift box tests</label>
+                <input id="emailInput" type="email" placeholder="you@example.com" autocomplete="email">
+              </div>
+              <label class="answer-help" style="display:flex;gap:10px;align-items:start;margin:0 0 14px">
+                <input id="giftConsent" type="checkbox" style="width:18px;height:18px;margin-top:1px;flex:0 0 auto">
+                Send me product recommendations and test-opportunity updates.
+              </label>
+              <button class="button" type="button" id="buildCard" style="width:100%"><span class="icon">C</span>Create my card</button>
+              <p class="saved-note" id="savedNote">Your answers save on this device.</p>
+            </div>
+            <div class="notice">Patch test new products. Stop if irritation persists, and see a dermatologist for acne, eczema, rosacea, melasma, or ongoing barrier damage.</div>
+          </aside>
+        </div>
+        <div class="panel quiz-type-strip">
+          <span class="kicker">All skin rituals</span>
+          <h3>Preview all 8 skin types while taking the survey.</h3>
+          <div class="type-grid" id="quizTypeGrid"></div>
+        </div>
+      </section>
+
+      <section id="result" class="result-page locked" aria-label="Your personalized skin card">
+        <div class="section-head">
+          <span class="kicker">Your result</span>
+          <h2>Your personalized glow card.</h2>
+          <p class="lead">Save this card before you shop. Product recommendations update below based on your result.</p>
+        </div>
+        <div class="result-showcase">
+          <div class="result-card-stage">
+            <article class="skin-card reveal" id="skinCard" aria-label="Generated skin type card">
+              <div class="card-top">
+                <div class="card-owner" id="cardTitle">Your Glow Passport Card</div>
+                <div class="card-korean" id="cardKorean">설문을 완료하면 카드가 열려요</div>
+                <div class="card-orb" aria-hidden="true"><span></span><span></span></div>
+              </div>
+              <div class="card-bottom">
+                <span class="type-pill" id="cardPill">Awaiting survey</span>
+                <div class="card-products" id="cardProducts">
+                  <div><span>Complete the survey</span><strong>01</strong></div>
+                  <div><span>Create your ritual</span><strong>02</strong></div>
+                  <div><span>Save your shelf</span><strong>03</strong></div>
+                </div>
+                <div class="card-brand"><span>My Glow Passport</span><span>glow.pass</span></div>
+              </div>
+            </article>
+          </div>
+          <div>
+            <span class="kicker">Result ritual</span>
+            <h2 id="resultPageTitle">Complete the survey</h2>
+            <p class="lead" id="resultPageCopy">Your card and product shelf will appear after the final question.</p>
+            <div class="result-actions">
+              <button class="button" type="button" id="downloadCardPage"><span class="icon icon-download" aria-hidden="true"><i></i></span>Save PNG</button>
+              <a class="button secondary" href="#card-types"><span class="icon icon-cards" aria-hidden="true"></span>View all card types</a>
+            </div>
+            <div class="notice" style="margin-top:18px">This card is skincare guidance, not a medical diagnosis.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="card-types" aria-label="Skin card type options">
+        <div class="section-head">
+          <span class="kicker">8 card types</span>
+          <h2>Eight glow rituals, one card.</h2>
+        </div>
+        <div class="type-grid" id="typeGrid">
+          <article class="type-card" style="--type-grad:linear-gradient(135deg, #e9d7ad, #9bd6d2, #fffaf0)" data-type="barrier" tabindex="0" role="link" aria-label="Open Barrier Bounce product page">
+            <div>
+              <span>Dehydrated oily</span>
+              <h3>Barrier Bounce</h3>
+              <p>수분부족형 지성 + 장벽 케어</p>
+            </div>
+            <div class="tag-row"><span class="tag">water-oil balance</span><span class="tag">barrier</span><span class="tag">light SPF</span></div>
+          </article>
+          <article class="type-card" style="--type-grad:linear-gradient(135deg, #fffaf0, #ead8b8, #f6c7be)" data-type="cloud" tabindex="0" role="link" aria-label="Open Cloud Cushion product page">
+            <div>
+              <span>Dry sensitive</span>
+              <h3>Cloud Cushion</h3>
+              <p>건성 민감 + 보습 장벽</p>
+            </div>
+            <div class="tag-row"><span class="tag">cream</span><span class="tag">ceramide</span><span class="tag">low-irritation</span></div>
+          </article>
+          <article class="type-card" style="--type-grad:linear-gradient(135deg, #d7efe7, #7c9f98, #fffaf0)" data-type="pore" tabindex="0" role="link" aria-label="Open Pore Pilot product page">
+            <div>
+              <span>Oily acne-prone</span>
+              <h3>Pore Pilot</h3>
+              <p>지성 트러블 + 모공 케어</p>
+            </div>
+            <div class="tag-row"><span class="tag">pores</span><span class="tag">BHA caution</span><span class="tag">oil control</span></div>
+          </article>
+          <article class="type-card" style="--type-grad:linear-gradient(135deg, #fffaf0, #f6c7be, #ead8b8)" data-type="glass" tabindex="0" role="link" aria-label="Open Glass Skin Prep product page">
+            <div>
+              <span>Balanced glow</span>
+              <h3>Glass Skin Prep</h3>
+              <p>밸런스 광채 + 결 케어</p>
+            </div>
+            <div class="tag-row"><span class="tag">glow</span><span class="tag">essence</span><span class="tag">daily SPF</span></div>
+          </article>
+          <article class="type-card" style="--type-grad:linear-gradient(135deg, #e99180, #ead8b8, #fffaf0)" data-type="spot" tabindex="0" role="link" aria-label="Open Even Tone Scout product page">
+            <div>
+              <span>Pigment aware</span>
+              <h3>Even Tone Scout</h3>
+              <p>색소 고민 + 선케어 루틴</p>
+            </div>
+            <div class="tag-row"><span class="tag">tone</span><span class="tag">vitamin C</span><span class="tag">sun care</span></div>
+          </article>
+          <article class="type-card" style="--type-grad:linear-gradient(135deg, #d7efe7, #f3dfc7, #ffffff)" data-type="mist" tabindex="0" role="link" aria-label="Open Jelly Mist Muse product page">
+            <div>
+              <span>Flight dehydrated</span>
+              <h3>Jelly Mist Muse</h3>
+              <p>비행 후 속건조 + 수분 레이어</p>
+            </div>
+            <div class="tag-row"><span class="tag">flight skin</span><span class="tag">mist</span><span class="tag">hyaluronic</span></div>
+          </article>
+          <article class="type-card" style="--type-grad:linear-gradient(135deg, #d7efe7, #b7d7c8, #fffaf0)" data-type="calm" tabindex="0" role="link" aria-label="Open Cica Calm product page">
+            <div>
+              <span>Redness reactive</span>
+              <h3>Cica Calm</h3>
+              <p>예민 홍조 + 시카 진정</p>
+            </div>
+            <div class="tag-row"><span class="tag">cica</span><span class="tag">redness</span><span class="tag">fragrance caution</span></div>
+          </article>
+          <article class="type-card" style="--type-grad:linear-gradient(135deg, #d6b2c8, #ead8b8, #fffaf0)" data-type="pdrn" tabindex="0" role="link" aria-label="Open PDRN Curious product page">
+            <div>
+              <span>Trend experimental</span>
+              <h3>PDRN Curious</h3>
+              <p>트렌드 성분 + 보습 백업</p>
+            </div>
+            <div class="tag-row"><span class="tag">PDRN</span><span class="tag">mask</span><span class="tag">trend-safe</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="ritualDetail" class="ritual-detail" aria-label="Selected skin card product page">
+        <div class="detail-hero">
+          <div>
+            <span class="kicker" id="detailKicker">Selected ritual</span>
+            <h2 id="detailTitle">Barrier Bounce</h2>
+            <p class="lead" id="detailCopy">Dehydrated-oily skin that wants water, barrier support, and non-greasy SPF.</p>
+          </div>
+        </div>
+        <div class="detail-layout">
+          <div>
+            <div class="product-grid detail-products" id="detailProductGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="products" aria-label="Recommended products">
+        <div class="section-head">
+          <span class="kicker">Your beauty picks</span>
+          <h2>Build your Seoul cart in real time.</h2>
+        </div>
+        <div class="panel tote-lab">
+          <h3>Tap products to drop them into your shopping cart.</h3>
+          <div class="tote-bag" id="toteBag" aria-label="Shopping cart">
+            <div class="cart-basket-image" aria-hidden="true"></div>
+            <div class="tote-drop-zone" id="toteDropZone"></div>
+          </div>
+          <div class="tote-summary" id="toteSummary"></div>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="reveal-modal" id="revealModal" aria-hidden="true" aria-label="Generated card reveal">
+    <button class="close-modal" type="button" id="closeModal" aria-label="Close result">X</button>
+    <div class="reveal-shell">
+      <div class="reveal-card-wrap" id="revealCardMount"></div>
+      <div class="reveal-info">
+        <span class="kicker">Your card is ready</span>
+        <h2 id="modalTitle">Barrier Bounce</h2>
+        <p id="modalCopy">Dehydrated-oily skin that wants water, barrier support, and non-greasy SPF.</p>
+        <div class="tag-row" id="modalTags"></div>
+        <div class="reveal-actions action-panel" id="revealActions">
+          <div class="field">
+            <label for="modalEmailInput">Where should we send your product picks?</label>
+            <input id="modalEmailInput" type="email" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="button-row" style="margin-top:0">
+            <button class="button" type="button" id="downloadCard2"><span class="icon icon-download" aria-hidden="true"><i></i></span>Save PNG</button>
+            <button class="button secondary" type="button" id="subscribeButton"><span class="icon">E</span>Email my picks</button>
+          </div>
+          <p class="saved-note" id="subscribeNote"></p>
+        </div>
+        <div class="notice" style="margin-top:18px">This card is skincare guidance, not a medical diagnosis.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="floating-seed" aria-live="polite">
+    <div class="seed-panel" id="seedPanel">
+      <span class="kicker">K-beauty seeding list</span>
+      <h3>Test new Korean skincare drops</h3>
+      <p class="answer-help">Leave your email and a note. Your survey result is included privately with the request.</p>
+      <div class="field">
+        <label for="seedEmail">Email</label>
+        <input id="seedEmail" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="seedMessage">Skin note</label>
+        <input id="seedMessage" placeholder="I want SPF / calming serum / texture care">
+      </div>
+      <button class="button" type="button" id="seedSubmit" style="width:100%"><span class="icon">S</span>Submit request</button>
+      <p class="saved-note" id="seedNote"></p>
+    </div>
+    <button class="seed-button" type="button" id="seedToggle" aria-expanded="false" aria-controls="seedPanel">
+      <span class="seed-button-mark" aria-hidden="true"></span>
+      <span><small>Free gift box waitlist</small>New K-skincare seeding</span>
+    </button>
+  </div>
+
+  <script>
+    const typeProfiles = {
+      barrier: {
+        name: "Barrier Bounce",
+        pill: "Dehydrated oily",
+        korean: "수분부족형 지성 + 장벽 케어",
+        tags: ["water-oil balance", "barrier", "light SPF"],
+        copy: "Dehydrated-oily skin that wants water, barrier support, and non-greasy SPF.",
+        gradient: "linear-gradient(152deg, #2f5d63, #9bd6d2 54%, #f6c7be)",
+        orb: "linear-gradient(135deg, #e9d7ad, #9bd6d2, #fffaf0)",
+        scores: { oil: 72, hydration: 35, sensitivity: 54, acne: 42 },
+        products: [
+          ["Anua Heartleaf 77 Soothing Toner", "$20", "Toner", "Light calming layer for redness-prone, oily-combo shoppers."],
+          ["Beauty of Joseon Relief Sun Aqua-Fresh Rice + B5", "$16", "SPF", "Weightless daily sunscreen for humid July city days."],
+          ["Dr.G Red Blemish Clear Soothing Cream", "$24", "Cream", "Gel-cream barrier support without a heavy finish."]
+        ]
+      },
+      cloud: {
+        name: "Cloud Cushion",
+        pill: "Dry sensitive",
+        korean: "건성 민감 + 보습 장벽",
+        tags: ["cream", "ceramide", "low-irritation"],
+        copy: "Dry, reactive skin that needs cream texture, low fragrance, and barrier-first layers.",
+        gradient: "linear-gradient(152deg, #7b6257, #ead8b8 56%, #fffaf0)",
+        orb: "linear-gradient(135deg, #fffaf0, #ead8b8, #f6c7be)",
+        scores: { oil: 18, hydration: 18, sensitivity: 82, acne: 20 },
+        products: [
+          ["Etude SoonJung pH 5.5 Relief Toner", "$16", "Toner", "Minimal soothing toner for easily irritated skin."],
+          ["Aestura Atobarrier 365 Cream", "$32", "Cream", "Ceramide-rich cream for dryness and barrier recovery."],
+          ["Round Lab Birch Juice Moisturizing Sunscreen", "$28", "SPF", "Moisturizing SPF with a soft skin finish."]
+        ]
+      },
+      pore: {
+        name: "Pore Pilot",
+        pill: "Oily acne-prone",
+        korean: "지성 트러블 + 모공 케어",
+        tags: ["pores", "BHA caution", "oil control"],
+        copy: "Oil-forward skin that wants shine control, BHA support, and non-comedogenic hydration.",
+        gradient: "linear-gradient(152deg, #284d4c, #7c9f98 52%, #d7efe7)",
+        orb: "linear-gradient(135deg, #d7efe7, #7c9f98, #fffaf0)",
+        scores: { oil: 88, hydration: 58, sensitivity: 34, acne: 82 },
+        products: [
+          ["Some By Mi AHA-BHA-PHA 30 Days Miracle Toner", "$18", "Toner", "Acid toner to use cautiously for pores and texture."],
+          ["COSRX Oil-Free Ultra-Moisturizing Lotion", "$25", "Lotion", "Light hydration for oily skin that still needs moisture."],
+          ["Skin1004 Hyalu-Cica Water-Fit Sun Serum", "$21", "SPF", "Watery SPF for humid, oily-skin days."]
+        ]
+      },
+      glass: {
+        name: "Glass Skin Prep",
+        pill: "Balanced glow",
+        korean: "밸런스 광채 + 결 케어",
+        tags: ["glow", "essence", "daily SPF"],
+        copy: "Balanced skin looking for bounce, hydration, and a camera-ready dewy finish.",
+        gradient: "linear-gradient(152deg, #c27f74, #f6c7be 48%, #ead8b8)",
+        orb: "linear-gradient(135deg, #fffaf0, #f6c7be, #ead8b8)",
+        scores: { oil: 46, hydration: 62, sensitivity: 22, acne: 18 },
+        products: [
+          ["COSRX Advanced Snail 96 Mucin Power Essence", "$25", "Essence", "Viral hydration and texture support for glass-skin routines."],
+          ["Numbuzin No.3 Super Glowing Essence Toner", "$22", "Toner", "Glow-oriented toner for smoother-looking texture."],
+          ["Beauty of Joseon Relief Sun Rice + Probiotics", "$16", "SPF", "Creamy sunscreen with a polished daily finish."]
+        ]
+      },
+      spot: {
+        name: "Even Tone Scout",
+        pill: "Pigment aware",
+        korean: "색소 고민 + 선케어 루틴",
+        tags: ["tone", "vitamin C", "sun care"],
+        copy: "Skin that marks easily after sun or breakouts and needs sunscreen discipline plus brightening support.",
+        gradient: "linear-gradient(152deg, #5f5149, #e99180 54%, #ead8b8)",
+        orb: "linear-gradient(135deg, #e99180, #ead8b8, #fffaf0)",
+        scores: { oil: 48, hydration: 44, sensitivity: 40, acne: 46 },
+        products: [
+          ["Goodal Green Tangerine Vita C Serum", "$24", "Serum", "Brightening serum for dullness and post-breakout marks."],
+          ["Beauty of Joseon Glow Deep Serum Rice + Alpha-Arbutin", "$17", "Serum", "Tone-focused serum with a gentle K-beauty positioning."],
+          ["Isntree Hyaluronic Acid Watery Sun Gel", "$19", "SPF", "Daily SPF layer for preventing new discoloration."]
+        ]
+      },
+      mist: {
+        name: "Jelly Mist Muse",
+        pill: "Flight dehydrated",
+        korean: "비행 후 속건조 + 수분 레이어",
+        tags: ["flight skin", "mist", "hyaluronic"],
+        copy: "Normal-to-dry skin that loses water during travel and wants light layers, misting, and cushion.",
+        gradient: "linear-gradient(152deg, #2f5d63, #b9d9d5 50%, #f3dfc7)",
+        orb: "linear-gradient(135deg, #d7efe7, #f3dfc7, #ffffff)",
+        scores: { oil: 32, hydration: 24, sensitivity: 28, acne: 16 },
+        products: [
+          ["Laneige Cream Skin Toner & Moisturizer", "$36", "Toner", "Milky toner-moisturizer for fast comfort after flights."],
+          ["Anua PDRN Hyaluronic Acid Capsule Mist", "$20", "Mist", "Trend-forward mist concept for dewy touch-ups."],
+          ["Torriden Dive-In Low Molecular Hyaluronic Acid Serum", "$22", "Serum", "Watery hydration serum for dehydrated skin."]
+        ]
+      },
+      calm: {
+        name: "Cica Calm",
+        pill: "Redness reactive",
+        korean: "예민 홍조 + 시카 진정",
+        tags: ["cica", "redness", "fragrance caution"],
+        copy: "Reactive skin that needs soothing centella, fragrance caution, and fewer high-strength actives.",
+        gradient: "linear-gradient(152deg, #4f6f62, #b7d7c8 54%, #fffaf0)",
+        orb: "linear-gradient(135deg, #d7efe7, #b7d7c8, #fffaf0)",
+        scores: { oil: 38, hydration: 46, sensitivity: 88, acne: 36 },
+        products: [
+          ["Skin1004 Madagascar Centella Ampoule", "$19", "Ampoule", "Centella-focused ampoule for a calming routine."],
+          ["Purito Wonder Releaf Centella Cream", "$20", "Cream", "Soothing cream for reactive, stressed skin."],
+          ["Dr.Jart+ Cicapair Tiger Grass Color Correcting Treatment", "$54", "Base", "Redness-neutralizing base for visible calm."]
+        ]
+      },
+      pdrn: {
+        name: "PDRN Curious",
+        pill: "Trend experimental",
+        korean: "트렌드 성분 + 보습 백업",
+        tags: ["PDRN", "mask", "trend-safe"],
+        copy: "Trend-forward skin curious about regenerative claims but still anchored in proven hydration and SPF.",
+        gradient: "linear-gradient(152deg, #6c5a67, #d6b2c8 50%, #ead8b8)",
+        orb: "linear-gradient(135deg, #d6b2c8, #ead8b8, #fffaf0)",
+        scores: { oil: 50, hydration: 46, sensitivity: 42, acne: 28 },
+        products: [
+          ["Medicube PDRN Pink Collagen Gel Mask", "$24", "Mask", "Fun pre-event glow format with trend appeal."],
+          ["Anua Collagen PDRN Melting Patch", "$20", "Patch", "Novel melting patch for targeted dry zones."],
+          ["Haruharu Wonder Black Rice Serum", "$27", "Serum", "Plant-forward antioxidant backup for trend skeptics."]
+        ]
+      }
+    };
+
+    const fallbackTrends = [
+      { source: "Google/beauty press", title: "PDRN and salmon-DNA language is still highly clickable, but claims need careful framing." },
+      { source: "July seasonal", title: "Korean SPF and non-greasy sunscreen hooks match heat, travel, and outdoor posting." },
+      { source: "TikTok/IG seeding", title: "Glass skin is evolving into barrier-first bounce, hydration, and texture refinement." },
+      { source: "Retail behavior", title: "Tourists already shop from screenshots, so a saveable skin card has direct store utility." }
+    ];
+
+    const productCatalog = {
+      barrier: [
+        ...typeProfiles.barrier.products,
+        ["Torriden Dive-In Low Molecular Hyaluronic Acid Serum", "$22", "Serum", "Watery hydration layer for tight-but-oily skin."],
+        ["Aestura Atobarrier 365 Hydro Essence", "$28", "Essence", "Barrier-focused hydration without a heavy cream finish."],
+        ["Round Lab Birch Juice Moisturizing Sunscreen", "$28", "SPF", "Comfortable SPF when your skin feels dehydrated from travel."]
+      ],
+      cloud: [
+        ...typeProfiles.cloud.products,
+        ["Illiyoon Ceramide Ato Concentrate Cream", "$20", "Cream", "Comforting ceramide cream for dry, easily irritated skin."],
+        ["Laneige Cream Skin Toner & Moisturizer", "$36", "Toner", "Milky toner for softening dry skin before cream."],
+        ["Dr.Jart+ Ceramidin Skin Barrier Serum Toner", "$39", "Toner", "Ceramide toner-serum for a cushiony routine."]
+      ],
+      pore: [
+        ...typeProfiles.pore.products,
+        ["Medicube Zero Pore Pads 2.0", "$24", "Pads", "Popular pore-care pad format for texture-prone skin."],
+        ["Anua Niacinamide 10% + TXA 4% Serum", "$24", "Serum", "Brightening and pore-support serum for oily-combo routines."],
+        ["Beauty of Joseon Red Bean Water Gel", "$18", "Gel cream", "Light gel moisturizer for shine-prone skin."]
+      ],
+      glass: [
+        ...typeProfiles.glass.products,
+        ["Biodance Bio-Collagen Real Deep Mask", "$19", "Mask", "Hydrogel mask format loved for plump, event-ready glow."],
+        ["I'm From Rice Toner", "$28", "Toner", "Rice toner for soft radiance and bright-looking skin."],
+        ["Medicube Collagen Night Wrapping Mask", "$29", "Mask", "Viral wrapping mask for a glossy morning finish."]
+      ],
+      spot: [
+        ...typeProfiles.spot.products,
+        ["Anua Niacinamide 10% + TXA 4% Serum", "$24", "Serum", "Tone-focused serum for marks and uneven look."],
+        ["Numbuzin No.5 Vitamin Concentrated Serum", "$26", "Serum", "Brightening serum style for dullness and tone."],
+        ["Haruharu Wonder Black Rice Moisture Airyfit Sunscreen", "$18", "SPF", "Daily sunscreen support for discoloration-prone skin."]
+      ],
+      mist: [
+        ...typeProfiles.mist.products,
+        ["Mixsoon Bean Essence", "$35", "Essence", "Minimal essence with a smooth, hydrated finish."],
+        ["Beauty of Joseon Ginseng Essence Water", "$18", "Essence", "Light essence step for travel-dull skin."],
+        ["Biodance Hydro Cera-nol Real Deep Mask", "$19", "Mask", "Hydrating mask for post-flight comfort."]
+      ],
+      calm: [
+        ...typeProfiles.calm.products,
+        ["Anua Azelaic Acid 10 Hyaluron Redness Soothing Serum", "$26", "Serum", "Trend-forward calming option for redness-prone routines."],
+        ["Round Lab Mugwort Calming Toner", "$25", "Toner", "Mugwort toner for a gentle calming layer."],
+        ["Abib Heartleaf Calming Toner Skin Booster", "$25", "Toner", "Heartleaf toner format for reactive skin days."]
+      ],
+      pdrn: [
+        ...typeProfiles.pdrn.products,
+        ["Anua PDRN Hyaluronic Acid Capsule Mist", "$20", "Mist", "PDRN-positioned mist for a trend-forward glow step."],
+        ["Medicube PDRN Pink Peptide Serum", "$28", "Serum", "PDRN-themed serum format for bounce and glow messaging."],
+        ["Beauty of Joseon Revive Eye Serum Ginseng + Retinal", "$17", "Eye", "Proven-active backup for early-aging routines."]
+      ]
+    };
+
+    const productImages = {
+      "Laneige Cream Skin Toner & Moisturizer": "https://media.glamgeek.com/media/2022/04/06/503aaebc-fc78-43eb-8a54-a95a30916c5a_lg.jpg",
+      "Anua PDRN Hyaluronic Acid Capsule Mist": "https://www.kiyobeauty.com/cdn/shop/files/AnuaPDRNHyaluronicAcidHydratingCapsuleMist100ml.png?v=1780088829&width=1500",
+      "Torriden Dive-In Low Molecular Hyaluronic Acid Serum": "https://www.sasa.com/cdn/shop/files/110589202001-1_3d0fcf0c-345b-410d-9ab4-36c89e77448a.jpg?v=1741164339&width=1946",
+      "Beauty of Joseon Relief Sun Rice + Probiotics": "https://beautyofjoseon.com/cdn/shop/files/relief-sunscreen-1-front.webp?v=1770603160",
+      "COSRX Advanced Snail 96 Mucin Power Essence": "https://skinsort.com/images/products/cosrx/advanced-snail-96-mucin-power-essence.jpg",
+      "Medicube PDRN Pink Collagen Gel Mask": "https://skinsort.com/images/products/medicube/pdrn-pink-collagen-gel-mask.jpg",
+      "Skin1004 Madagascar Centella Ampoule": "https://skinsort.com/images/products/skin1004/madagascar-centella-ampoule.jpg",
+      "Anua Heartleaf 77 Soothing Toner": "https://anua.com/cdn/shop/files/anua-us-toner-heartleaf-77-soothing-toner-1239193744.jpg?v=1779181932&width=2000",
+      "Beauty of Joseon Relief Sun Aqua-Fresh Rice + B5": "https://beautyofjoseon.com/cdn/shop/files/relief-sunscreen-aqua-fresh-1.webp?crop=center&height=3000&v=1770602802&width=3000",
+      "Dr.G Red Blemish Clear Soothing Cream": "https://skinsort.com/images/products/dr-g/red-blemish-clear-soothing-cream.jpg",
+      "Round Lab Birch Juice Moisturizing Sunscreen": "https://roundlab.com/cdn/shop/files/BIRCH_JUICE_MOISTURIZING_UVLOCK3_Large_10126e46-dfcc-4cd5-970c-146d4be65989.webp?v=1772852134&width=1946",
+      "Etude SoonJung pH 5.5 Relief Toner": "https://skinsort.com/images/products/etude-house/soonjung-ph-5-5-relief-toner.jpg",
+      "Aestura Atobarrier 365 Cream": "https://skinsort.com/images/products/aestura/atobarrier-365-cream.jpg",
+      "Aestura Atobarrier 365 Hydro Essence": "https://int.aestura.com/cdn/shop/files/1_Atobarrier365-Hydro_Essence_thumbnail_Product-200ml__1200x1200_5b44c8c6-f402-4c16-94ed-8a8df78a6ded.png?v=1734030285",
+      "Some By Mi AHA-BHA-PHA 30 Days Miracle Toner": "https://skinsort.com/images/products/some-by-mi/aha-bha-pha-30-days-miracle-toner.jpg",
+      "COSRX Oil-Free Ultra-Moisturizing Lotion": "https://skinsort.com/images/products/cosrx/oil-free-ultra-moisturizing-lotion-with-birch-sap.jpg",
+      "Skin1004 Hyalu-Cica Water-Fit Sun Serum": "https://skinsort.com/images/products/skin1004/madagascar-centella-hyalu-cica-water-fit-sun-serum.jpg",
+      "Numbuzin No.3 Super Glowing Essence Toner": "https://skinsort.com/images/products/numbuzin/no-3-super-glowing-essence-toner.jpg",
+      "Goodal Green Tangerine Vita C Serum": "https://skinsort.com/images/products/goodal/green-tangerine-vita-c-dark-spot-care-serum.jpg",
+      "Beauty of Joseon Glow Deep Serum Rice + Alpha-Arbutin": "https://skinsort.com/images/products/beauty-of-joseon/glow-deep-serum-rice-alpha-arbutin.jpg",
+      "Isntree Hyaluronic Acid Watery Sun Gel": "https://skinsort.com/images/products/isntree/hyaluronic-acid-watery-sun-gel.jpg",
+      "Mixsoon Bean Essence": "https://skinsort.com/images/products/mixsoon/bean-essence.jpg",
+      "Beauty of Joseon Ginseng Essence Water": "https://skinsort.com/images/products/beauty-of-joseon/ginseng-essence-water.jpg",
+      "Biodance Hydro Cera-nol Real Deep Mask": "https://skinsort.com/images/products/biodance/hydro-cera-nol-real-deep-mask.jpg",
+      "Purito Wonder Releaf Centella Cream": "https://skinsort.com/images/products/purito/wonder-releaf-centella-cream-unscented.jpg",
+      "Dr.Jart+ Cicapair Tiger Grass Color Correcting Treatment": "https://skinsort.com/images/products/dr-jart/cicapair-tiger-grass-color-correcting-treatment-spf30.jpg",
+      "Anua Collagen PDRN Melting Patch": "https://skinsort.com/images/products/anua/collagen-pdrn-melting-patch.jpg",
+      "Haruharu Wonder Black Rice Serum": "https://skinsort.com/images/products/haruharu-wonder/black-rice-hyaluronic-anti-wrinkle-serum.jpg",
+      "Medicube PDRN Pink Peptide Serum": "https://skinsort.com/images/products/medicube/pdrn-pink-peptide-serum.jpg",
+      "Beauty of Joseon Revive Eye Serum Ginseng + Retinal": "https://skinsort.com/images/products/beauty-of-joseon/revive-eye-serum-ginseng-retinal.jpg"
+    };
+
+    const productShopping = {
+      "Laneige Cream Skin Toner & Moisturizer": {
+        retailer: "LANEIGE",
+        url: "https://us.laneige.com/products/cream-skin-toner-moisturizer"
+      },
+      "Anua PDRN Hyaluronic Acid Capsule Mist": {
+        retailer: "Anua",
+        url: "https://anua.com/search?q=pdrn%20mist"
+      },
+      "COSRX Advanced Snail 96 Mucin Power Essence": {
+        retailer: "COSRX",
+        url: "https://www.cosrx.com/products/advanced-snail-96-mucin-power-essence"
+      },
+      "Beauty of Joseon Relief Sun Rice + Probiotics": {
+        retailer: "Beauty of Joseon",
+        url: "https://beautyofjoseon.com/products/relief-sun-rice-probiotics"
+      },
+      "Beauty of Joseon Relief Sun Aqua-Fresh Rice + B5": {
+        retailer: "Beauty of Joseon",
+        url: "https://beautyofjoseon.com/products/relief-sun-aqua-fresh-rice-b5"
+      },
+      "Skin1004 Madagascar Centella Ampoule": {
+        retailer: "SKIN1004",
+        url: "https://skin1004.com/products/madagascar-centella-ampoule"
+      },
+      "Anua Heartleaf 77 Soothing Toner": {
+        retailer: "ANUA",
+        url: "https://anua.us/products/heartleaf-77-soothing-toner"
+      },
+      "Round Lab Birch Juice Moisturizing Sunscreen": {
+        retailer: "Round Lab",
+        url: "https://roundlab.com/products/birch-juice-moisturizing-sunscreen"
+      },
+      "Dr.G Red Blemish Clear Soothing Cream": {
+        retailer: "Amazon",
+        url: "https://www.amazon.com/s?k=Dr.G+Red+Blemish+Clear+Soothing+Cream"
+      },
+      "Torriden Dive-In Low Molecular Hyaluronic Acid Serum": {
+        retailer: "Sasa",
+        url: "https://www.sasa.com/products/110589202001"
+      },
+      "Aestura Atobarrier 365 Hydro Essence": {
+        retailer: "AESTURA",
+        url: "https://int.aestura.com/products/atobarrier-365-hydro-essence"
+      },
+      "Beauty of Joseon Glow Deep Serum Rice + Alpha-Arbutin": {
+        retailer: "Beauty of Joseon",
+        url: "https://beautyofjoseon.com/products/glow-deep-serum-rice-alpha-arbutin"
+      },
+      "Beauty of Joseon Ginseng Essence Water": {
+        retailer: "Beauty of Joseon",
+        url: "https://beautyofjoseon.com/products/ginseng-essence-water"
+      },
+      "Beauty of Joseon Revive Eye Serum Ginseng + Retinal": {
+        retailer: "Beauty of Joseon",
+        url: "https://beautyofjoseon.com/products/revive-eye-serum-ginseng-retinal"
+      }
+    };
+
+    const trendFeed = document.getElementById("trendFeed");
+    const quizForm = document.getElementById("quizForm");
+    const resultName = document.getElementById("resultName");
+    const resultCopy = document.getElementById("resultCopy");
+    const scoreBars = document.getElementById("scoreBars");
+    const productGrid = document.getElementById("productGrid");
+    const resultSection = document.getElementById("result");
+    const cardTypesSection = document.getElementById("card-types");
+    const quizSideResult = document.getElementById("quizSideResult");
+    const resultPageTitle = document.getElementById("resultPageTitle");
+    const resultPageCopy = document.getElementById("resultPageCopy");
+    const typeGrid = document.getElementById("typeGrid");
+    const quizTypeGrid = document.getElementById("quizTypeGrid");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailKicker = document.getElementById("detailKicker");
+    const detailCopy = document.getElementById("detailCopy");
+    const detailProductGrid = document.getElementById("detailProductGrid");
+    const toteDropZone = document.getElementById("toteDropZone");
+    const toteSummary = document.getElementById("toteSummary");
+    const card = document.getElementById("skinCard");
+    const cardTitle = document.getElementById("cardTitle");
+    const cardKorean = document.getElementById("cardKorean");
+    const cardPill = document.getElementById("cardPill");
+    const cardProducts = document.getElementById("cardProducts");
+    const nameInput = document.getElementById("nameInput");
+    const emailInput = document.getElementById("emailInput");
+    const giftConsent = document.getElementById("giftConsent");
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    const savedNote = document.getElementById("savedNote");
+    const revealModal = document.getElementById("revealModal");
+    const revealCardMount = document.getElementById("revealCardMount");
+    const revealActions = document.getElementById("revealActions");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalCopy = document.getElementById("modalCopy");
+    const modalTags = document.getElementById("modalTags");
+    const modalEmailInput = document.getElementById("modalEmailInput");
+    const subscribeNote = document.getElementById("subscribeNote");
+    const seedPanel = document.getElementById("seedPanel");
+    const seedToggle = document.getElementById("seedToggle");
+    const seedEmail = document.getElementById("seedEmail");
+    const seedMessage = document.getElementById("seedMessage");
+    const seedSubmit = document.getElementById("seedSubmit");
+    const seedNote = document.getElementById("seedNote");
+    const STORAGE_KEY = "glowPassportProfile";
+    const API_BASE = location.port === "8000" ? "http://localhost:8001" : "";
+    const defaultAnswers = {};
+    const questionNames = ["oil", "sensitivity", "dehydration", "climate", "acne", "tone", "texture", "need", "spfFinish", "goal"];
+    let activeQuestionIndex = 0;
+    let currentKey = "barrier";
+    let revealTimer;
+    const selectedProducts = new Set();
+    let apiReachable = false;
+
+    function getAnswers() {
+      return Object.fromEntries(new FormData(quizForm).entries());
+    }
+
+    function chooseType(answers) {
+      if (answers.sensitivity === "high") return "calm";
+      if (answers.sensitivity === "barrier") return "barrier";
+      if (answers.oil === "dry" && (answers.texture === "cream" || answers.texture === "balm")) return "cloud";
+      if (answers.climate === "plane" || answers.dehydration === "tight" || answers.texture === "mist") return "mist";
+      if (answers.acne === "inflamed" || answers.acne === "maskne" || answers.acne === "pores" || answers.goal === "clear") return "pore";
+      if (answers.climate === "sun" || answers.tone === "brown" || answers.tone === "red" || answers.goal === "even") return "spot";
+      if (answers.goal === "glass") return "glass";
+      if (answers.goal === "calm") return "cloud";
+      if (answers.texture === "balm") return "cloud";
+      if (answers.need === "serum") return "pdrn";
+      return "pdrn";
+    }
+
+    function renderProfile(key, animate = false) {
+      currentKey = key;
+      const profile = typeProfiles[key];
+      resultName.textContent = profile.name;
+      resultCopy.textContent = profile.copy;
+      card.style.background = profile.gradient;
+      card.style.setProperty("--orb", profile.orb);
+      cardTitle.textContent = `${nameInput.value || "Your"}'s ${profile.name} Card`;
+      cardKorean.textContent = profile.korean;
+      cardPill.textContent = profile.pill;
+      cardProducts.innerHTML = profile.products.slice(0, 3).map(([name, price]) => `<div><span>${name}</span><strong>${price}</strong></div>`).join("");
+      scoreBars.innerHTML = Object.entries(profile.scores).map(([label, value]) => `
+        <div class="score-line">
+          <div><span>${label}</span><span>${value}</span></div>
+          <div class="bar"><span style="--w:${value}%"></span></div>
+        </div>
+      `).join("");
+      renderProductCards(productGrid, (productCatalog[key] || profile.products).slice(0, 6));
+      renderToteLab();
+      if (animate) {
+        card.classList.remove("reveal");
+        void card.offsetWidth;
+        card.classList.add("reveal");
+      }
+    }
+
+    function renderFeed(items) {
+      if (!trendFeed) return;
+      trendFeed.innerHTML = items.map(item => `
+        <div class="feed-item">
+          <span>${item.source}</span>
+          <strong>${item.title}</strong>
+        </div>
+      `).join("");
+    }
+
+    function productInitials(name) {
+      return name.split(/\s+/).filter(Boolean).slice(0, 2).map(word => word[0]).join("").toUpperCase();
+    }
+
+    function productMediaMarkup(name, category) {
+      const image = productImages[name];
+      const fallback = productInitials(category || name);
+      const shopping = shoppingInfo(name);
+      return `
+        <div class="product-media${image ? "" : " image-missing"}">
+          <a class="retailer-badge" href="${shopping.url}" target="_blank" rel="noopener noreferrer" aria-label="Shop ${name} at ${shopping.retailer}">${shopping.retailer}</a>
+          ${image ? `<img src="${image}" alt="${name} product photo" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.product-media').classList.add('image-missing'); this.remove();">` : ""}
+          <span class="product-fallback" aria-hidden="true">${fallback}</span>
+        </div>
+      `;
+    }
+
+    function shoppingInfo(name) {
+      return productShopping[name] || {
+        retailer: "Shop Search",
+        url: `https://www.google.com/search?tbm=shop&q=${encodeURIComponent(name)}`
+      };
+    }
+
+    function productCardMarkup([name, price, category, text]) {
+      const shopping = shoppingInfo(name);
+      const added = selectedProducts.has(name);
+      return `
+        <article class="product-card">
+          ${productMediaMarkup(name, category)}
+          <div class="product-head"><div><span class="tag">${category}</span><h3>${name}</h3></div><span class="price">${price}</span></div>
+          <p>${text}</p>
+          <div class="product-actions">
+            <button type="button" class="cart-action${added ? " added" : ""}" data-product="${name}" aria-pressed="${added ? "true" : "false"}">${added ? "Added to cart" : "Add to cart"}</button>
+            <a class="shop-link" href="${shopping.url}" target="_blank" rel="noopener noreferrer">Shop at ${shopping.retailer}</a>
+          </div>
+        </article>
+      `;
+    }
+
+    function typeGridMarkup() {
+      return Object.entries(typeProfiles).map(([key, profile]) => `
+        <article class="type-card" style="--type-grad:${profile.orb}" data-type="${key}" tabindex="0" role="link" aria-label="Open ${profile.name} product page">
+          <div>
+            <span>${profile.pill}</span>
+            <h3>${profile.name}</h3>
+            <p>${profile.korean}</p>
+          </div>
+          <div class="tag-row">${profile.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
+        </article>
+      `).join("");
+    }
+
+    function wireTypeGrid(container) {
+      if (!container) return;
+      container.querySelectorAll(".type-card").forEach(cardNode => {
+        cardNode.addEventListener("click", () => openTypePage(cardNode.dataset.type, true));
+        cardNode.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openTypePage(cardNode.dataset.type, true);
+          }
+        });
+      });
+    }
+
+    function renderTypeGrid() {
+      const markup = typeGridMarkup();
+      if (typeGrid) {
+        typeGrid.innerHTML = markup;
+        wireTypeGrid(typeGrid);
+      }
+      if (quizTypeGrid) {
+        quizTypeGrid.innerHTML = markup;
+        wireTypeGrid(quizTypeGrid);
+      }
+    }
+
+    function renderProductCards(target, products) {
+      target.innerHTML = products.map(productCardMarkup).join("");
+    }
+
+    function beadBackground(name) {
+      const image = productImages[name];
+      if (!image) return "radial-gradient(circle at 45% 42%, rgba(155,214,210,.5), rgba(244,166,169,.3))";
+      return `url('${image}')`;
+    }
+
+    function animateProductDrop(cardNode, name) {
+      if (!cardNode || !toteDropZone) return;
+      const origin = cardNode.querySelector(".product-media img") || cardNode.querySelector(".product-fallback");
+      if (!origin) return;
+      const from = origin.getBoundingClientRect();
+      const to = toteDropZone.getBoundingClientRect();
+      const orb = document.createElement("span");
+      orb.className = "cart-fly";
+      orb.style.setProperty("--bead-bg", beadBackground(name));
+      orb.style.left = `${from.left + from.width / 2 - 28}px`;
+      orb.style.top = `${from.top + from.height / 2 - 28}px`;
+      document.body.appendChild(orb);
+      requestAnimationFrame(() => {
+        const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+        const dy = to.top + 74 - (from.top + from.height / 2);
+        orb.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(.64)`;
+        orb.style.opacity = ".92";
+      });
+      setTimeout(() => orb.remove(), 760);
+    }
+
+    function renderToteLab() {
+      if (!toteDropZone || !toteSummary) return;
+      const picked = [...selectedProducts];
+      toteDropZone.innerHTML = picked.slice(-8).map(name => `
+        <span class="tote-bead" style="--bead-bg:${beadBackground(name)}" aria-hidden="true"></span>
+      `).join("");
+      toteSummary.innerHTML = picked.length
+        ? picked.map(name => `<span class="tote-chip">${name}</span>`).join("")
+        : `<span class="tote-chip">No picks yet</span>`;
+    }
+
+    function renderTypeDetail(key) {
+      const profile = typeProfiles[key] || typeProfiles.barrier;
+      detailKicker.textContent = `${profile.pill} / ${profile.korean}`;
+      detailTitle.textContent = profile.name;
+      detailCopy.textContent = profile.copy;
+      renderProductCards(detailProductGrid, productCatalog[key] || profile.products);
+      document.querySelectorAll(".type-card").forEach(node => {
+        node.classList.toggle("active", node.dataset.type === key);
+      });
+    }
+
+    function openTypePage(key, shouldScroll = false) {
+      if (!typeProfiles[key]) return;
+      currentKey = key;
+      renderProfile(key);
+      renderTypeDetail(key);
+      history.replaceState(null, "", `#type/${key}`);
+      if (shouldScroll) document.getElementById("ritualDetail").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function routeFromHash() {
+      if (typeGrid && typeGrid.children.length === 0) renderTypeGrid();
+      const hashType = location.hash.startsWith("#type/") ? location.hash.replace("#type/", "") : "";
+      if (!typeProfiles[hashType]) {
+        renderTypeDetail(currentKey);
+        return;
+      }
+      currentKey = hashType;
+      renderProfile(hashType);
+      renderTypeDetail(hashType);
+    }
+
+    function applyAnswers(answers) {
+      Object.entries({ ...defaultAnswers, ...answers }).forEach(([name, value]) => {
+        const input = quizForm.querySelector(`input[name="${name}"][value="${value}"]`);
+        if (input) input.checked = true;
+      });
+    }
+
+    function updateProgress() {
+      const groups = questionNames;
+      const answered = groups.filter(name => quizForm.querySelector(`input[name="${name}"]:checked`)).length;
+      const pct = Math.round((answered / groups.length) * 100);
+      progressText.textContent = `${answered} of ${groups.length} answered`;
+      progressBar.style.setProperty("--w", `${pct}%`);
+      return { answered, total: groups.length, complete: answered === groups.length };
+    }
+
+    function setActiveQuestion(index) {
+      const questions = [...quizForm.querySelectorAll(".question")];
+      activeQuestionIndex = Math.max(0, Math.min(index, questions.length - 1));
+      questions.forEach((question, questionIndex) => {
+        question.classList.toggle("active", questionIndex === activeQuestionIndex);
+        question.classList.remove("answered");
+      });
+    }
+
+    function nextUnansweredIndex() {
+      const index = questionNames.findIndex(name => !quizForm.querySelector(`input[name="${name}"]:checked`));
+      return index === -1 ? questionNames.length - 1 : index;
+    }
+
+    function showResultPage() {
+      const progress = updateProgress();
+      if (!progress.complete) return false;
+      currentKey = chooseType(getAnswers());
+      renderProfile(currentKey, true);
+      renderTypeDetail(currentKey);
+      const profile = typeProfiles[currentKey];
+      resultPageTitle.textContent = profile.name;
+      resultPageCopy.textContent = profile.copy;
+      resultSection.classList.remove("locked");
+      quizSideResult.classList.remove("locked");
+      saveProfile("Card created.");
+      setTimeout(() => {
+        resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 240);
+      return true;
+    }
+
+    function readStoredProfile() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function saveProfile(message = "Saved on this device.") {
+      const payload = {
+        answers: getAnswers(),
+        name: nameInput.value.trim(),
+        email: emailInput.value.trim(),
+        consent: giftConsent.checked,
+        result: currentKey,
+        updatedAt: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      savedNote.textContent = message;
+      window.clearTimeout(saveProfile.noteTimer);
+      saveProfile.noteTimer = window.setTimeout(() => {
+        savedNote.textContent = "Your answers save on this device.";
+      }, 1800);
+    }
+
+    function restoreProfile() {
+      const stored = readStoredProfile();
+      applyAnswers(stored.answers || defaultAnswers);
+      if (stored.name) nameInput.value = stored.name;
+      if (stored.email) emailInput.value = stored.email;
+      if (stored.email) seedEmail.value = stored.email;
+      giftConsent.checked = Boolean(stored.consent);
+      const progress = updateProgress();
+      if (progress.complete) {
+        currentKey = stored.result || chooseType(getAnswers());
+        renderProfile(currentKey);
+        showResultPage();
+      } else {
+        setActiveQuestion(nextUnansweredIndex());
+      }
+      renderToteLab();
+    }
+
+    function openReveal() {
+      const profile = typeProfiles[currentKey];
+      const clone = card.cloneNode(true);
+      clone.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
+      clone.removeAttribute("id");
+      clone.classList.remove("reveal");
+      revealCardMount.innerHTML = "";
+      revealCardMount.appendChild(clone);
+      modalTitle.textContent = profile.name;
+      modalCopy.textContent = profile.copy;
+      modalTags.innerHTML = profile.tags.map(tag => `<span class="tag">${tag}</span>`).join("");
+      modalEmailInput.value = emailInput.value.trim();
+      subscribeNote.textContent = "";
+      revealActions.classList.remove("visible");
+      revealModal.classList.add("open");
+      revealModal.setAttribute("aria-hidden", "false");
+      window.clearTimeout(revealTimer);
+      window.setTimeout(() => {
+        clone.classList.add("reveal");
+      }, 40);
+      revealTimer = window.setTimeout(() => {
+        revealActions.classList.add("visible");
+      }, 2100);
+    }
+
+    function closeReveal() {
+      revealModal.classList.remove("open");
+      revealModal.setAttribute("aria-hidden", "true");
+      window.clearTimeout(revealTimer);
+    }
+
+    function resetSurvey() {
+      quizForm.reset();
+      localStorage.removeItem(STORAGE_KEY);
+      resultSection.classList.add("locked");
+      quizSideResult.classList.add("locked");
+      nameInput.value = "";
+      emailInput.value = "";
+      modalEmailInput.value = "";
+      seedEmail.value = "";
+      giftConsent.checked = false;
+      updateProgress();
+      setActiveQuestion(0);
+      savedNote.textContent = "Your answers save on this device.";
+    }
+
+    async function submitLead(message = "") {
+      const email = (modalEmailInput.value || emailInput.value || seedEmail.value || "").trim();
+      if (!email) {
+        return { ok: false, message: "Add your email first." };
+      }
+      const payload = {
+        name: nameInput.value.trim(),
+        email,
+        consent: giftConsent.checked,
+        result: currentKey,
+        message,
+        answers: getAnswers(),
+        source: "glow-passport-web"
+      };
+      try {
+        const response = await fetch(`${API_BASE}/api/leads`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error("lead");
+        const data = await response.json();
+        const status = data.notificationStatus || "stored_for_email_followup";
+        if (status === "email_sent") {
+          return { ok: true, message: `Saved and emailed. Request #${data.id}` };
+        }
+        if (status === "email_not_configured") {
+          return { ok: true, message: `Saved (Request #${data.id}). Email relay is not configured yet.` };
+        }
+        if (status === "email_failed") {
+          return { ok: true, message: `Saved (Request #${data.id}). Email delivery failed this time.` };
+        }
+        return { ok: true, message: `Saved privately. Request #${data.id}` };
+      } catch (error) {
+        return { ok: false, message: "Saved on this device. Start the waitlist API on port 8001 to sync." };
+      }
+    }
+
+    async function subscribeLead() {
+      if (modalEmailInput.value.trim()) emailInput.value = modalEmailInput.value.trim();
+      saveProfile("Saved for recommendations.");
+      if (!emailInput.value.trim()) {
+        subscribeNote.textContent = "Add your email to receive product picks.";
+        return;
+      }
+      const result = await submitLead("Product picks requested from result modal.");
+      subscribeNote.textContent = result.message;
+    }
+
+    async function submitSeedLead() {
+      if (seedEmail.value.trim()) emailInput.value = seedEmail.value.trim();
+      const result = await submitLead(seedMessage.value.trim() || "Interested in Korean skincare product seeding opportunities.");
+      seedNote.textContent = result.message;
+      if (result.ok) seedPanel.classList.remove("open");
+    }
+
+    async function refreshTrends() {
+      renderFeed([{ source: "Loading", title: "Checking live trend headlines..." }]);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4200);
+      try {
+        const query = encodeURIComponent("K-beauty PDRN sunscreen glass skin jelly mist");
+        const response = await fetch(`${API_BASE}/api/product-scout?q=${query}`, { cache: "no-store", signal: controller.signal });
+        if (!response.ok) throw new Error("feed");
+        const data = await response.json();
+        const items = (data.items || []).slice(0, 5).map(item => ({
+          source: item.source || "Google News",
+          title: (item.title || "K-beauty trend update").replace(/\s-\s[^-]+$/, "")
+        }));
+        renderFeed(items.length ? items : fallbackTrends);
+      } catch (error) {
+        renderFeed(fallbackTrends);
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
+    async function checkApiHealth() {
+      try {
+        const response = await fetch(`${API_BASE}/api/health`, { cache: "no-store" });
+        apiReachable = response.ok;
+      } catch (error) {
+        apiReachable = false;
+      }
+    }
+
+    async function downloadCanvasCard() {
+      const profile = typeProfiles[currentKey];
+      const canvas = document.createElement("canvas");
+      const scale = 2;
+      canvas.width = 1080;
+      canvas.height = 1500;
+      const ctx = canvas.getContext("2d");
+      const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      const colors = {
+        barrier: ["#2f5d63", "#9bd6d2", "#f6c7be"],
+        cloud: ["#7b6257", "#ead8b8", "#fffaf0"],
+        pore: ["#284d4c", "#7c9f98", "#d7efe7"],
+        glass: ["#c27f74", "#f6c7be", "#ead8b8"],
+        spot: ["#5f5149", "#e99180", "#ead8b8"],
+        mist: ["#2f5d63", "#b9d9d5", "#f3dfc7"],
+        calm: ["#4f6f62", "#b7d7c8", "#fffaf0"],
+        pdrn: ["#6c5a67", "#d6b2c8", "#ead8b8"]
+      }[currentKey];
+      g.addColorStop(0, colors[0]);
+      g.addColorStop(.56, colors[1]);
+      g.addColorStop(1, colors[2]);
+      ctx.fillStyle = g;
+      roundedRect(ctx, 0, 0, canvas.width, canvas.height, 92);
+      ctx.fill();
+      ctx.globalAlpha = .22;
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(214, 318, 105, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(844, 1040, 148, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "800 86px Inter, Arial, sans-serif";
+      wrapText(ctx, `${nameInput.value || "Your"}'s`, 92, 150, 860, 96);
+      wrapText(ctx, `${profile.name} Card`, 92, 250, 860, 96);
+      drawOrb(ctx, colors);
+      ctx.font = "800 34px Inter, Arial, sans-serif";
+      ctx.fillText(profile.pill.toUpperCase(), 92, 1020);
+      ctx.font = "500 34px Inter, Arial, sans-serif";
+      profile.products.slice(0, 3).forEach((product, index) => {
+        const y = 1110 + index * 72;
+        ctx.fillText(product[0], 92, y);
+        ctx.font = "800 34px Inter, Arial, sans-serif";
+        ctx.fillText(product[1], 886, y);
+        ctx.font = "500 34px Inter, Arial, sans-serif";
+      });
+      ctx.font = "800 30px Inter, Arial, sans-serif";
+      ctx.fillText("MY GLOW PASSPORT", 92, 1404);
+      ctx.textAlign = "right";
+      ctx.fillText("glow.pass", 988, 1404);
+      const fileName = `glow-passport-${profile.name.toLowerCase().replaceAll(" ", "-")}.png`;
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+      if (!blob) throw new Error("Could not create PNG file.");
+
+      try {
+        if ("showSaveFilePicker" in window) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [{ description: "PNG image", accept: { "image/png": [".png"] } }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          savedNote.textContent = "PNG saved to your selected location.";
+          return;
+        }
+      } catch (error) {
+        if (error && error.name === "AbortError") return;
+      }
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = fileName;
+      link.href = url;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1200);
+      savedNote.textContent = "PNG download started.";
+    }
+
+    function roundedRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.arcTo(x + width, y, x + width, y + height, radius);
+      ctx.arcTo(x + width, y + height, x, y + height, radius);
+      ctx.arcTo(x, y + height, x, y, radius);
+      ctx.arcTo(x, y, x + width, y, radius);
+      ctx.closePath();
+    }
+
+    function drawOrb(ctx, colors) {
+      const g = ctx.createRadialGradient(445, 590, 20, 540, 650, 250);
+      g.addColorStop(0, "#ffffff");
+      g.addColorStop(.22, colors[2]);
+      g.addColorStop(.72, colors[1]);
+      g.addColorStop(1, colors[0]);
+      ctx.save();
+      ctx.translate(540, 650);
+      ctx.rotate(-0.2);
+      ctx.scale(1.25, .82);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, 210, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.save();
+      ctx.translate(540, 650);
+      ctx.rotate(.28);
+      ctx.scale(.34, 1.08);
+      ctx.globalAlpha = .78;
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(0, 0, 210, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.globalAlpha = 1;
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(" ");
+      let line = "";
+      for (let n = 0; n < words.length; n += 1) {
+        const testLine = line + words[n] + " ";
+        if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+          ctx.fillText(line, x, y);
+          line = words[n] + " ";
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    quizForm.addEventListener("change", event => {
+      const question = event.target.closest(".question");
+      saveProfile("Survey saved.");
+      const progress = updateProgress();
+      if (progress.complete) {
+        if (question) question.classList.add("answered");
+        setTimeout(() => showResultPage(), 420);
+        return;
+      }
+      if (question) question.classList.add("answered");
+      setTimeout(() => setActiveQuestion(nextUnansweredIndex()), 420);
+    });
+    document.addEventListener("click", event => {
+      const button = event.target.closest(".cart-action");
+      if (!button) return;
+      const productName = button.dataset.product;
+      if (!productName) return;
+      const cardNode = button.closest(".product-card");
+      const isAdding = !selectedProducts.has(productName);
+      if (isAdding) {
+        selectedProducts.add(productName);
+        animateProductDrop(cardNode, productName);
+      } else {
+        selectedProducts.delete(productName);
+      }
+      renderProductCards(productGrid, (productCatalog[currentKey] || typeProfiles[currentKey].products).slice(0, 6));
+      renderProductCards(detailProductGrid, productCatalog[currentKey] || typeProfiles[currentKey].products);
+      renderToteLab();
+    });
+    nameInput.addEventListener("input", () => {
+      renderProfile(currentKey);
+      saveProfile("Name saved.");
+    });
+    emailInput.addEventListener("input", () => saveProfile("Email saved."));
+    modalEmailInput.addEventListener("input", () => {
+      emailInput.value = modalEmailInput.value;
+      saveProfile("Email saved.");
+    });
+    giftConsent.addEventListener("change", () => saveProfile("Preference saved."));
+    document.getElementById("startSurvey").addEventListener("click", resetSurvey);
+    document.getElementById("buildCard").addEventListener("click", () => {
+      if (!showResultPage()) {
+        savedNote.textContent = "Complete every survey card first.";
+        setActiveQuestion(nextUnansweredIndex());
+      }
+    });
+    document.getElementById("downloadCard2").addEventListener("click", async () => {
+      try {
+        await downloadCanvasCard();
+      } catch (error) {
+        subscribeNote.textContent = "Could not save PNG on this browser.";
+      }
+    });
+    document.getElementById("downloadCardPage").addEventListener("click", async () => {
+      try {
+        await downloadCanvasCard();
+      } catch (error) {
+        savedNote.textContent = "Could not save PNG on this browser.";
+      }
+    });
+    document.getElementById("subscribeButton").addEventListener("click", subscribeLead);
+    document.getElementById("closeModal").addEventListener("click", closeReveal);
+    function setSeedPanelOpen(forceOpen) {
+      const next = typeof forceOpen === "boolean" ? forceOpen : !seedPanel.classList.contains("open");
+      seedPanel.classList.toggle("open", next);
+      seedToggle.setAttribute("aria-expanded", next ? "true" : "false");
+      if (!next) return;
+      if (emailInput.value.trim()) seedEmail.value = emailInput.value.trim();
+      seedEmail.focus();
+      if (!apiReachable) {
+        seedNote.textContent = "Waitlist API offline. Run glow_passport_api.py to capture + email leads.";
+      }
+    }
+
+    seedToggle.addEventListener("click", () => setSeedPanelOpen());
+    document.addEventListener("click", event => {
+      const clickedToggle = event.target.closest("#seedToggle");
+      if (clickedToggle) return;
+      if (!seedPanel.classList.contains("open")) return;
+      if (event.target.closest("#seedPanel")) return;
+      setSeedPanelOpen(false);
+    });
+    seedSubmit.addEventListener("click", submitSeedLead);
+    revealModal.addEventListener("click", event => {
+      if (event.target === revealModal) closeReveal();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && revealModal.classList.contains("open")) closeReveal();
+    });
+    const refreshButton = document.getElementById("refreshTrends");
+    if (refreshButton) refreshButton.addEventListener("click", refreshTrends);
+    window.addEventListener("hashchange", routeFromHash);
+
+    try {
+      renderTypeGrid();
+    } catch (error) {
+      /* Keep static fallback cards visible if JS enhancement fails. */
+    }
+    restoreProfile();
+    routeFromHash();
+    renderFeed(fallbackTrends);
+    renderToteLab();
+    checkApiHealth();
+  </script>
+</body>
+</html>
