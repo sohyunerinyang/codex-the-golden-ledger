@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Golden Ledger | California Buyer Intelligence</title>
+  <meta name="description" content="A luxury California buyer intelligence platform for offer pricing, contingency risk, and true monthly carrying cost.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell nav">
+      <a class="brand" href="index.html" aria-label="The Golden Ledger home">
+        <span class="brand-mark">GL</span>
+        <span>The Golden Ledger<small>California Buyer Intelligence</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#instruments">Instruments</a>
+        <a href="#authority">Authority</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="pricing.html#inquiry" class="button button-small">Request Access</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <figure class="hero-banner" aria-label="California residential market context">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=82" alt="Warm California residential exterior with refined architectural detail">
+            <figcaption>California Residential Ledger / Offer, Risk, Carry</figcaption>
+          </figure>
+          <p class="eyebrow">Private California Transaction Intelligence</p>
+          <h1>Know the number before the offer becomes expensive.</h1>
+          <p class="lead">The Golden Ledger gives California buyers the three figures listing portals do not show: the offer required to win, the liability behind a waived contingency, and the true monthly carry after Mello-Roos and fire-zone insurance are included.</p>
+          <div class="hero-actions">
+            <a class="button" href="#instruments">Explore the Instruments</a>
+            <a class="button button-quiet" href="pricing.html">View Membership</a>
+          </div>
+        </div>
+
+        <aside class="hero-intel" aria-label="The Golden Ledger intelligence preview">
+          <div class="intel-top">
+            <div>
+              <span>Golden Ledger Brief</span>
+              <strong>Los Feliz / 90027</strong>
+            </div>
+            <div class="intel-seal">GL</div>
+          </div>
+          <div class="intel-map">
+            <div id="heroMiniMap" class="hero-mini-map" aria-label="Los Feliz parcel map preview"></div>
+            <div class="intel-map-label">APN 5588-014-021</div>
+            <div class="intel-map-source">OpenStreetMap base / APN + CFD + FHSZ overlays</div>
+          </div>
+          <div class="intel-primary">
+            <span>Recommended offer for 85% win probability</span>
+            <strong>$919,000</strong>
+          </div>
+          <div class="intel-metrics">
+            <div><span>Win-rate</span><strong>85%</strong></div>
+            <div><span>Waiver EMV</span><strong>$22.5k</strong></div>
+            <div><span>Hidden carry</span><strong>$612/mo</strong></div>
+          </div>
+          <div class="intel-status">
+            <span>CFD</span>
+            <span>FHSZ</span>
+            <span>Prop 13</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="intro-strip">
+      <div class="shell strip-grid">
+        <div>
+          <p class="eyebrow">Built For The Buyer Side</p>
+          <h2>A real estate decision system for the part of the transaction that usually happens in the dark.</h2>
+        </div>
+        <p>Most public portals optimize discovery. The Golden Ledger optimizes decision quality after discovery: how high to bid, what protection to keep, and whether the monthly obligation still fits the buyer's income after California-specific costs are counted.</p>
+      </div>
+    </section>
+
+    <section class="region-showcase" aria-label="The Golden Ledger feature windows">
+      <div class="shell">
+        <div class="section-head region-head">
+          <p class="eyebrow">Feature Windows</p>
+          <h2>Three instruments, shown where the decision actually happens.</h2>
+          <p>The Golden Ledger keeps the experience visual and practical: price pressure at the offer table, physical exposure at the property, and California-specific carry costs before the buyer commits.</p>
+        </div>
+        <div class="region-grid">
+          <article class="region-card feature-window-offer">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=82" alt="Residential exterior used for California offer strategy analysis">
+            <div>
+              <span>Offer Win-Rate Predictor</span>
+              <h3>Know the number that can win.</h3>
+              <p>Models sale-to-list pressure, days on market, and competing-offer density into 60%, 85%, and 95% offer targets.</p>
+            </div>
+          </article>
+          <article class="region-card tall feature-window-risk">
+            <img src="https://www.bobvila.com/wp-content/uploads/2018/04/woman-examing-wall-crack-GettyImages-2158406621.jpg?quality=85&strip=all" alt="A person examining a cracked interior wall before waiving inspection contingency">
+            <div>
+              <span>Contingency Waive Risk Analyzer</span>
+              <h3>Price the risk before removing protection.</h3>
+              <p>Translates home age, construction material, seismic exposure, and inspection uncertainty into expected monetary liability.</p>
+            </div>
+          </article>
+          <article class="region-card feature-window-carry">
+            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=82" alt="California hillside residential landscape used for hidden carry cost modeling">
+            <div>
+              <span>Mello-Roos &amp; Fire Insurance Tracker</span>
+              <h3>See the real monthly carry.</h3>
+              <p>Separates Prop 13, county bonds, Mello-Roos CFD exposure, fire-zone insurance tiers, and DTI movement into visible ledger lines.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="instruments" class="section">
+      <div class="shell">
+        <div class="section-head">
+          <p class="eyebrow">Three Core Instruments</p>
+          <h2>Each page answers one question buyers already ask their agent.</h2>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <span class="feature-number">01</span>
+            <h3>Offer Win-Rate Predictor</h3>
+            <p>Models recent sale-to-list premiums, days on market, and competing-offer pressure to return recommended offer prices for 60%, 85%, and 95% win probability.</p>
+            <div class="mini-metric"><span>Example</span><strong>$925,000 at 85%</strong></div>
+            <a href="instruments/win-rate.html">Open instrument</a>
+          </article>
+
+          <article class="feature-card">
+            <span class="feature-number">02</span>
+            <h3>Contingency Waive Risk Analyzer</h3>
+            <p>Translates home age, construction material, seismic exposure, and regional failure patterns into an expected monetary liability before inspection or loan protection is waived.</p>
+            <div class="mini-metric"><span>Example</span><strong>$25,000 exposure</strong></div>
+            <a href="instruments/contingency-risk.html">Open instrument</a>
+          </article>
+
+          <article class="feature-card">
+            <span class="feature-number">03</span>
+            <h3>Mello-Roos &amp; Fire Insurance Tracker</h3>
+            <p>Checks county, APN, special-tax district, and fire hazard assumptions to estimate true monthly carrying cost and front-end DTI with California costs included.</p>
+            <div class="mini-metric"><span>Example</span><strong>$612/mo hidden carry</strong></div>
+            <a href="instruments/hidden-costs.html">Open instrument</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper-panel">
+      <div class="shell proof-grid">
+        <div class="map-panel live-map-panel" aria-label="Interactive California parcel intelligence map">
+          <div id="ledgerMap" class="live-map"></div>
+          <div class="map-toolbar map-toolbar-live" aria-label="Map controls">
+            <button type="button" class="map-control active" data-ledger-layer="apn">APN Layer</button>
+            <button type="button" class="map-control active" data-ledger-layer="cfd">CFD Boundary</button>
+            <button type="button" class="map-control active" data-ledger-layer="fire">FHSZ Overlay</button>
+            <label class="map-market">
+              Market
+              <select id="marketSelect">
+                <option value="los-feliz">Los Feliz / 90027</option>
+                <option value="palo-alto">Palo Alto / 94301</option>
+                <option value="irvine">Irvine / 92618</option>
+              </select>
+            </label>
+          </div>
+          <div class="map-readout" aria-live="polite">
+            <span id="mapMarketLabel">Los Feliz / 90027</span>
+            <strong id="mapParcelLabel">APN 5588-014-021</strong>
+            <p id="mapSourceLabel">Live OpenStreetMap base layer with Golden Ledger parcel overlays.</p>
+          </div>
+          <div class="map-footnote" aria-label="Map layer definitions">
+            <p><strong>APN Layer</strong> identifies the subject parcel.</p>
+            <p><strong>CFD Boundary</strong> marks Community Facilities District and Mello-Roos special-tax exposure.</p>
+            <p><strong>FHSZ Overlay</strong> marks Fire Hazard Severity Zone inputs used to pressure-test insurance assumptions.</p>
+          </div>
+        </div>
+
+        <div>
+          <p class="eyebrow">Workflow</p>
+          <h2>From listing interest to offer strategy in four calm steps.</h2>
+          <ol class="timeline">
+            <li><span>1</span><div><strong>Financial fit</strong><p>Enter income, down payment, price, rate, and county assumptions. The DTI gauge updates before the buyer falls in love with the wrong number.</p></div></li>
+            <li><span>2</span><div><strong>Hidden costs</strong><p>Mello-Roos, Prop 13 baseline, county bonds, and fire insurance tiers are separated into visible ledger lines.</p></div></li>
+            <li><span>3</span><div><strong>Waiver risk</strong><p>Inspection and loan contingency exposure is translated into a dollar figure and agent-ready briefing language.</p></div></li>
+            <li><span>4</span><div><strong>Offer posture</strong><p>The buyer chooses how much certainty to pay for: 60%, 85%, or 95% win probability.</p></div></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="authority" class="section">
+      <div class="shell">
+        <div class="section-head narrow">
+          <p class="eyebrow">Data Authority</p>
+          <h2>Credible data based on California government records.</h2>
+          <p>The Golden Ledger uses California statutory tax structures, county assessor records, Mello-Roos district references, wildfire hazard mapping, and recent transaction signals to frame every number inside a verifiable buyer ledger.</p>
+        </div>
+        <div class="authority-grid">
+          <a class="authority-card" href="https://www.boe.ca.gov/proptaxes/proptax.htm" target="_blank" rel="noopener noreferrer" aria-label="Open California Board of Equalization Property Tax Department source">
+            <div class="authority-badge">CA<br>BOE</div>
+            <h3>Prop 13 Property Tax Baseline</h3>
+            <p>The Golden Ledger uses California Board of Equalization terminology and County Assessor certified property tax records, including the Proposition 13 statutory framework.</p>
+            <span class="source-link">View source</span>
+          </a>
+          <a class="authority-card" href="https://www.treasurer.ca.gov/cdiac/publications/alphabetical" target="_blank" rel="noopener noreferrer" aria-label="Open California State Treasurer CDIAC Mello-Roos financing source">
+            <div class="authority-badge">CFD<br>BOND</div>
+            <h3>Mello-Roos Special Tax Districts</h3>
+            <p>The Golden Ledger uses California State Treasurer and local agency Community Facilities District bond references to identify special-tax exposure.</p>
+            <span class="source-link">View source</span>
+          </a>
+          <a class="authority-card" href="https://osfm.fire.ca.gov/what-we-do/community-wildfire-preparedness-and-mitigation/fire-hazard-severity-zones" target="_blank" rel="noopener noreferrer" aria-label="Open CAL FIRE Fire Hazard Severity Zones source">
+            <div class="authority-badge">CDI<br>FHSZ</div>
+            <h3>Wildfire &amp; Insurance Risk</h3>
+            <p>The Golden Ledger uses California Department of Insurance wildfire risk terminology and Fire Hazard Severity Zone mapping inputs to model coverage pressure.</p>
+            <span class="source-link">View source</span>
+          </a>
+          <a class="authority-card" href="https://www.car.org/marketdata" target="_blank" rel="noopener noreferrer" aria-label="Open California Association of Realtors market data source">
+            <div class="authority-badge">MLS<br>90D</div>
+            <h3>Sale-to-List Market Pressure</h3>
+            <p>The Golden Ledger models recent sale-to-list ratio, days-on-market movement, and closed transaction trend signals by California micro-market.</p>
+            <span class="source-link">View source</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing-cta">
+      <div class="shell">
+        <p class="eyebrow">Membership</p>
+        <h2>Open the ledger before you write the offer.</h2>
+        <p>Choose a tier, send the target county or APN, and start with the instrument that matches your current buying stage.</p>
+        <a class="button" href="pricing.html">See Pricing &amp; Inquiry</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-grid">
+      <div><strong>The Golden Ledger</strong><p>Know what to offer, waive, and carry before you commit.</p></div>
+      <div><span>Instruments</span><a href="instruments/win-rate.html">Win-Rate Predictor</a><a href="instruments/contingency-risk.html">Waive Risk Analyzer</a><a href="instruments/hidden-costs.html">Hidden Cost Tracker</a></div>
+      <div><span>Company</span><a href="pricing.html">Pricing</a><a href="pricing.html#inquiry">Request Access</a><a href="#authority">Data Authority</a></div>
+    </div>
+  </footer>
+
+  <a class="floating-logo" href="index.html" aria-label="The Golden Ledger">
+    <span>GL</span>
+    <strong>The Golden Ledger</strong>
+  </a>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contingency Waive Risk Analyzer | The Golden Ledger</title>
+  <meta name="description" content="Expected monetary liability simulation before waiving inspection or loan contingencies on a California home.">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell nav">
+      <a class="brand" href="../index.html"><span class="brand-mark">GL</span><span>The Golden Ledger<small>California Buyer Intelligence</small></span></a>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+      <nav class="nav-links">
+        <a href="../index.html#instruments">Instruments</a>
+        <a href="../index.html#authority">Authority</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../pricing.html#inquiry" class="button button-small">Request Access</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero instrument-hero">
+      <div class="shell">
+        <a class="breadcrumb" href="../index.html#instruments">Instruments / Entry 02</a>
+        <p class="eyebrow">Contingency Waive Risk Analyzer</p>
+        <h1>See the cost of removing protection before you sign it away.</h1>
+        <p class="lead">Translate age, construction, seismic exposure, and wildfire context into a reserve number you can weigh against a cleaner offer.</p>
+      </div>
+    </section>
+
+    <section class="section no-top">
+      <div class="shell tool-grid">
+        <div>
+          <h2>What this helps you decide</h2>
+          <p>A waived contingency can help an offer compete. It can also move roof, plumbing, foundation, seismic, and insurance exposure onto the buyer before those risks are fully priced.</p>
+          <div class="callout">Compare the advantage of a cleaner offer with the reserve you may need if the property is hiding expensive physical exposure.</div>
+          <div class="source-note">Inputs are framed around county assessor construction era, permit history, regional geologic risk, Fire Hazard Severity Zone references, and material failure patterns.</div>
+        </div>
+
+        <div class="tool-panel">
+          <div class="tool-head"><span>Live Preview</span><strong>Pre-1978 Hillside Home</strong></div>
+          <label>Home age <output id="ageOutput">58 yrs</output><input id="homeAge" type="range" min="5" max="100" step="1" value="58"></label>
+          <label>Construction material
+            <select id="material">
+              <option>Wood frame and stucco</option>
+              <option>Unreinforced masonry</option>
+              <option>Concrete and steel</option>
+            </select>
+          </label>
+          <label>Seismic zone risk <output id="seismicOutput">72%</output><input id="seismicRisk" type="range" min="0" max="100" step="1" value="72"></label>
+          <div class="risk-readout">
+            <span id="riskPill" class="status risk">Elevated Exposure</span>
+            <strong id="emvValue">$168,000</strong>
+            <p id="briefText">Do not waive casually. The property profile carries compounded seismic, age, and insurability exposure.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-grid">
+      <div><strong>The Golden Ledger</strong><p>Know what to offer, waive, and carry before you commit.</p></div>
+      <div><span>Instruments</span><a href="win-rate.html">Win-Rate Predictor</a><a href="contingency-risk.html">Waive Risk Analyzer</a><a href="hidden-costs.html">Hidden Cost Tracker</a></div>
+      <div><span>Company</span><a href="../index.html">Home</a><a href="../pricing.html#inquiry">Request Access</a><a href="../index.html#authority">Data Authority</a></div>
+    </div>
+  </footer>
+
+  <a class="floating-logo" href="../index.html" aria-label="The Golden Ledger">
+    <span>GL</span>
+    <strong>The Golden Ledger</strong>
+  </a>
+
+  <script src="../assets/main.js"></script>
+</body>
+</html>
